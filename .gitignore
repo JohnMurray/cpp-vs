@@ -1,0 +1,8 @@
+# Editor Files
+*.swp
+
+# Build Artifacts
+build/
+
+# Mac OS Files
+.DS_Store
