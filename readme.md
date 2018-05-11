@@ -1,6 +1,11 @@
-# CPP-VS
+<p align="center">
+    <img 
+      src="https://raw.githubusercontent.com/JohnMurray/cpp-vs/master/logo/logo.png" 
+      width="300px"
+      alt="cpp-vs">
+</p>
 
-Comparing Cpp to other languages to showcase modern C++ and make 
+Comparing C++ to other languages to showcase modern C++ and make 
 it less scary.
 
 # Not Yet Launched
@@ -69,6 +74,10 @@ In order to build the site, you will need to have the following dependencies ins
 
 You can generate the site by running `make`.
 
+
+## License
+
+Please see __LICENSE__.
 
 
   [b_fs]: https://www.boost.org/doc/libs/1_67_0/libs/filesystem/doc/index.htm
