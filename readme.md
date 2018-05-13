@@ -70,6 +70,7 @@ In order to build the site, you will need to have the following dependencies ins
 + [Less Compiler](http://lesscss.org/)
 + [CTemplate](https://github.com/rockdreamer/ctemplate)
 + [Boost Filesystem][b_fs] support (and thus [Boost System][b_sy] as a transitive dep)
++ [yaml-cpp](https://github.com/jbeder/yaml-cpp) (tested with v0.5)
 + Compiler with C++ 17 support
 
 You can generate the site by running `make`.

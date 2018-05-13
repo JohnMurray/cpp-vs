@@ -1,5 +1,7 @@
-CXX = g++-8
-CXX_LINK_FLAGS = -l ctemplate_nothreads -l boost_system -l boost_filesystem
+#CXX = g++-8
+CXX = clang++-6.0
+CXX_LINK_FLAGS = -l ctemplate_nothreads -l boost_system -l boost_filesystem -l yaml-cpp
+CXX_INCLUDE_FLAGS = -I . -I ./gen/
 
 default: clean generate
 
@@ -10,7 +12,7 @@ clean:
 .PHONY: compile
 compile:
 	mkdir -p build/bin/
-	$(CXX) -o build/bin/builder gen/main.cpp $(CXX_LINK_FLAGS) -std=c++17
+	$(CXX) -o build/bin/builder gen/main.cpp $(CXX_LINK_FLAGS) $(CXX_INCLUDE_FLAGS) -std=c++17
 
 .PHONY: generate-setup
 generate-setup:
