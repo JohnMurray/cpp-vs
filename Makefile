@@ -25,3 +25,8 @@ generate: generate-setup compile
 	@lessc site/less/app.less build/site/style/app.css
 	@cp logo/logo.png build/site/assets/logo.png
 	@build/bin/builder site
+
+.PHONY: serve
+serve: generate-setup
+	@cp -R server/* build/
+	@cd build && bundle exec puma -t 5:5 -p 1234

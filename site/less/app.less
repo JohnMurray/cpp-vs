@@ -90,7 +90,7 @@ a {
 
   a.primary-nav-link {
     color: @titleNavColor;
-    border-bottom: 2px solid #545454;
+    border-bottom: 2px solid @titleNavColor;
     margin-left: 7px;
   }
 
@@ -118,7 +118,7 @@ a {
 
    .code-left {
      display: inline-block;
-     border-right: 1px solid #545454;
+     border-right: 1px solid @titleNavColor;
      width: 49%;
    }
 
@@ -127,6 +127,22 @@ a {
      width: 49%;
    }
  }
+
+/**
+ * Code Versus Page
+ */
+.versus-list {
+  .lang-group {
+    margin-top: 15px;
+    .link {
+      display: block;
+      margin-bottom: 5px;
+    }
+    a {
+      border-bottom: 1px dashed @titleNavColor;
+    }
+  }
+}
 
  /**
   * About Page

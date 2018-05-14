@@ -4,6 +4,8 @@
 
 # Build Artifacts
 build/
+server/bin
+server/.bundle/
 
 # Mac OS Files
 .DS_Store
