@@ -14,19 +14,30 @@
 
 namespace fs = boost::filesystem;
 
+/** Config for generating the site, read in from config.yaml */
 struct Config {
     std::vector<std::string> files_to_template;
+    std::map<std::string, std::string> template_variables;
 
     static Config parse(fs::path);
 };
 
 Config Config::parse(fs::path config_path) {
     auto yaml_conf = YAML::LoadFile(config_path.string());
-    return Config {
+    auto conf = Config {
         .files_to_template = yaml_conf["files"].as<std::vector<std::string>>(),
+        .template_variables = {},
     };
+    YAML::Node vs = yaml_conf["variables"];
+    if (vs.IsDefined() && vs.IsMap()) {
+        for (auto it = vs.begin(); it != vs.end(); ++it) {
+            conf.template_variables[it->first.as<std::string>()] = it->second.as<std::string>();;
+        }
+    }
+    return conf;
 }
 
+/** File representing a page */
 struct PageFile {
     std::string layout;
     std::string title;
@@ -72,6 +83,9 @@ int main(int argc, char** argv) {
     auto config = Config::parse(site_dir / "config.yaml");
 
     ctemplate::TemplateDictionary template_dict("template_dict");
+    for (auto const &pair: config.template_variables) {
+        template_dict.SetValue(pair.first, pair.second);
+    }
     std::map<std::string, std::string> layouts;
 
     // Read includes into our template dictionary object
@@ -111,11 +125,21 @@ int main(int argc, char** argv) {
             std::cerr << "Can not render to layout '" << header.layout << "' as it does not exist\n";
             return 1;
         }
+        // render the page
+        std::cout << "Rendering page: " << f << "\n";
         ctemplate::StringToTemplateCache("template_file", layouts[header.layout], ctemplate::DO_NOT_STRIP);
         template_dict.SetValue("content", header.body);
+        template_dict.SetValue("title", header.title);
         std::string rendered_template;
         ctemplate::ExpandTemplate("template_file", ctemplate::DO_NOT_STRIP, &template_dict, &rendered_template);
 
+        // second pass to set dynamic data within includes
+        ctemplate::StringToTemplateCache("temp", rendered_template, ctemplate::DO_NOT_STRIP);
+        rendered_template.clear();
+        ctemplate::ExpandTemplate("temp", ctemplate::DO_NOT_STRIP, &template_dict, &rendered_template);
+        ctemplate::mutable_default_template_cache()->ClearCache();
+
+        // write out rendered page to disk
         std::ofstream rendered_file;
         rendered_file.open((build_dir / str_replace(f, ".tpl.html", ".html")).string());
         rendered_file << rendered_template;

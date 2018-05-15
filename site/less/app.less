@@ -31,6 +31,7 @@ a {
     color: @hoverLinkColor;
     text-decoration: none;
   }
+  border-bottom: 1px dashed @titleNavColor;
 }
 
 /**
@@ -138,25 +139,33 @@ a {
       display: block;
       margin-bottom: 5px;
     }
-    a {
-      border-bottom: 1px dashed @titleNavColor;
-    }
   }
 }
 
  /**
-  * About Page
+  * About & Moar Page
   */
 .about-page {
   text-align: center;
+}
+.blurb {
+  display: block;
+  font-size: 16px;
+  line-height: 1.6em;
+  margin: 0 auto;
+  text-align: left;
+  width: 60%;
+}
+.moar-page {
+  text-align: center;
 
-  .blurb {
-    display: block;
-    font-size: 16px;
-    line-height: 1.6em;
-    margin: 0 auto;
-    text-align: left;
-    width: 60%;
+  .resource-group {
+    margin-bottom: 20px;
+
+    .link {
+      display: block;
+      margin-bottom: 5px;
+    }
   }
 }
 
@@ -165,10 +174,11 @@ a {
   * Footer Styles
   */
 .footer {
-  margin-top: 10px;
+  margin-top: 25px;
   
   a {
     color: #888;
+    border: none;
     &:hover {
       color: #888;
       border-bottom: 1px solid #767676;
