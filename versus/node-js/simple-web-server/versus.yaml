@@ -1,0 +1,10 @@
+name: 'Simple Web Server'
+filename: 'simple-web-server.html'
+versus:
+  name: 'Node-JS'
+  key: 'nodejs'
+
+other:
+  - 'server.js'
+cpp:
+  - 'server.cc'

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
 /**
  * @brief Replace a portion of the string with a new value

@@ -3,6 +3,14 @@ files:
   - about.tpl.html
   - moar.tpl.html
 
+versus_file:   'versus.tpl.html'
+versus_folder: 'versus'
+versus:
+  - name:   'NodeJS'
+    folder: 'node-js'
+  - name:   'Ruby'
+    folder: 'ruby'
+
 variables:
   base_url: '//localhost:1234'
   twitter_url: 'https://www.twitter.com/johnmurray_io'

@@ -12,18 +12,21 @@ clean:
 .PHONY: compile
 compile:
 	mkdir -p build/bin/
-	$(CXX) -o build/bin/builder gen/main.cpp $(CXX_LINK_FLAGS) $(CXX_INCLUDE_FLAGS) -std=c++17
+	$(CXX) -o build/bin/builder gen/main.cc $(CXX_LINK_FLAGS) $(CXX_INCLUDE_FLAGS) -std=c++17
 
 .PHONY: generate-setup
 generate-setup:
 	@mkdir -p build/site/style
+	@mkdir -p build/site/js
 	@mkdir -p build/site/assets
+	@mkdir -p build/site/versus
 
 .PHONY: generate
 generate: generate-setup compile
 	@echo 'Generating Site...'
 	@lessc site/less/app.less build/site/style/app.css
-	@cp logo/logo.png build/site/assets/logo.png
+	@cp site/js/prism.js      build/site/js/prism.js
+	@cp logo/logo.png         build/site/assets/logo.png
 	@build/bin/builder site
 
 .PHONY: serve
