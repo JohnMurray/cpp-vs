@@ -41,7 +41,8 @@ What this project goes __not__ aim to do:
 
   + Show the _superiority_ of C++
   + Bash other languages
-  + Scare people away from the language
+  + Be a showcase for clever hacks or terse solutions
+  + Scare people away from the language with hard to read/understand code examples
 
 
 ## Contributing
@@ -71,7 +72,7 @@ In order to build the site, you will need to have the following dependencies ins
 + [CTemplate](https://github.com/rockdreamer/ctemplate)
 + [Boost Filesystem][b_fs] support (and thus [Boost System][b_sy] as a transitive dep)
 + [yaml-cpp](https://github.com/jbeder/yaml-cpp) (tested with v0.5)
-+ Compiler with C++ 17 support
++ Compiler with C++ 17 support (mostly cause I haven't tested with anything else)
 
 You can generate the site by running `make`.
 
