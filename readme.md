@@ -79,7 +79,7 @@ You can generate the site by running `make`.
 
 ## License
 
-Please see __LICENSE__.
+Please see the __LICENSE__ file.
 
 
   [b_fs]: https://www.boost.org/doc/libs/1_67_0/libs/filesystem/doc/index.htm
