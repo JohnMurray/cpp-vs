@@ -1,0 +1,8 @@
+name:        'Map Reduce'
+filename:    'scala-map-reduce.html'
+versus_lang: 'Scala'
+
+other:
+  - 'map-reduce.scala'
+cpp:
+  - 'map-reduce.cc'

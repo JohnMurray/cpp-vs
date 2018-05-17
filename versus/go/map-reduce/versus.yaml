@@ -1,0 +1,8 @@
+name:        'Map Reduce'
+filename:    'go-map-reduce.html'
+versus_lang: 'Go'
+
+other:
+  - 'map-reduce.go'
+cpp:
+  - 'map-reduce.cc'

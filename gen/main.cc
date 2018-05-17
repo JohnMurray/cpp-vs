@@ -108,6 +108,9 @@ std::string file_ext_to_prism_language(const fs::path &p) {
         auto ext = file.substr(n + 1, file.length());
         if (ext == "cc") return "cpp";
         if (ext == "js") return "javascript";
+        if (ext == "go") return "go";
+        if (ext == "rb") return "ruby";
+        if (ext == "scala") return "scala";
     }
     return "none";
 }
@@ -160,7 +163,6 @@ int main(int argc, char** argv) {
             std::exit(1);
         }
         // render the page
-        std::cout << "Rendering page: " << f << "\n";
         ctemplate::StringToTemplateCache("template_file", layouts[header.layout], ctemplate::DO_NOT_STRIP);
         template_dict.SetValue("content", header.body);
         template_dict.SetValue("title", header.title);
@@ -188,7 +190,7 @@ int main(int argc, char** argv) {
                 auto vs_conf = YAML::LoadFile(dir_entry.path().string());
                 std::cout << "\tAdding versus: " << vs_conf["name"].as<std::string>() << "\n";
 
-                dict.SetValue("name", vs_conf["versus"]["name"].as<std::string>());
+                dict.SetValue("name", vs_conf["versus_lang"].as<std::string>());
                 auto render_code_file = [&](std::string &&key) -> std::string {
                     std::string out;
                     for (size_t i = 0; i < vs_conf[key].size(); i++) {
@@ -203,9 +205,8 @@ int main(int argc, char** argv) {
                     return out;
                 };
                 dict.SetValue("cpp_code", render_code_file("cpp"));
-                    // read_file((dir_entry.path().parent_path() / vs_conf["cpp"][0].as<std::string>()).string()));
                 dict.SetValue("other_code", render_code_file("other"));
-                    // read_file((dir_entry.path().parent_path() / vs_conf["other"][0].as<std::string>()).string()));
+                dict.SetValue("versus_name", vs_conf["name"].as<std::string>());
 
                 std::string rendered;
                 ctemplate::ExpandTemplate("includes_versus", ctemplate::DO_NOT_STRIP, &dict, &rendered);

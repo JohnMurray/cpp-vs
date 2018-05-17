@@ -1,8 +1,6 @@
-name: 'Simple Web Server'
-filename: 'simple-web-server.html'
-versus:
-  name: 'Node-JS'
-  key: 'nodejs'
+name:        'Simple Web Server'
+filename:    'nodejs-simple-web-server.html'
+versus_lang: 'Node-JS'
 
 other:
   - 'server.js'

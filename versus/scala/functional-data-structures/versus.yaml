@@ -1,0 +1,8 @@
+name:        'Functional Data Structures'
+filename:    'scala-functional-data-structures.html'
+versus_lang: 'Scala'
+
+other:
+  - 'fds.scala'
+cpp:
+  - 'fds.cc'

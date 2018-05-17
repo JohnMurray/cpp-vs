@@ -10,6 +10,10 @@ versus:
     folder: 'node-js'
   - name:   'Ruby'
     folder: 'ruby'
+  - name:   'Go'
+    folder: 'go'
+  - name:   'Scala'
+    folder: 'scala'
 
 variables:
   base_url: '//localhost:1234'

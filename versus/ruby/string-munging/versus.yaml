@@ -1,0 +1,8 @@
+name:        'String Munging'
+filename:    'ruby-string-munging.html'
+versus_lang: 'Ruby'
+
+other:
+  - 'munger.rb'
+cpp:
+  - 'munger.cc'

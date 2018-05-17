@@ -1,0 +1,8 @@
+name:        'Process Coordination'
+filename:    'scala-process-coordination.html'
+versus_lang: 'Scala'
+
+other:
+  - 'coordination.scala'
+cpp:
+  - 'coordination.cc'
