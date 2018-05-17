@@ -171,12 +171,14 @@ int main(int argc, char** argv) {
         ctemplate::StringToTemplateCache("temp", rendered_template, ctemplate::DO_NOT_STRIP);
         rendered_template.clear();
         ctemplate::ExpandTemplate("temp", ctemplate::DO_NOT_STRIP, &template_dict, &rendered_template);
-        ctemplate::mutable_default_template_cache()->ClearCache();
+        ctemplate::mutable_default_template_cache()->Delete("template_file");
+        ctemplate::mutable_default_template_cache()->Delete("temp");
 
         return rendered_template;
     };
 
     // Render all of the "versus" files
+    std::map<std::string, std::map<std::string, std::string>> versus_links;
     for (auto const &pair: config.versus) {
         std::cout << "Generating " << pair.first << " versus\n";
         auto base_folder = site_dir / ".." / config.versus_folder / pair.second;
@@ -213,9 +215,28 @@ int main(int argc, char** argv) {
                 versus_file.open((build_dir / "versus" / vs_conf["filename"].as<std::string>()).string());
                 versus_file << render_file_with_layout(config.versus_file);
                 versus_file.close();
+
+                versus_links[pair.first][vs_conf["name"].as<std::string>()] = "versus/" + vs_conf["filename"].as<std::string>();
             }
         }
     }
+
+    // Render versus links for main page (dynamically built from previous section)
+    std::string groups;
+    for (auto const &group: versus_links) {
+        ctemplate::TemplateDictionary group_dict("groups");
+        std::string links;
+        for (auto const &link: group.second) {
+            ctemplate::TemplateDictionary link_dict("links");
+            link_dict.SetValue("name", link.first);
+            link_dict.SetValue("link", link.second);
+            ctemplate::ExpandTemplate("includes_versus_link_group_link", ctemplate::DO_NOT_STRIP, &link_dict, &links);
+        }
+        group_dict.SetValue("group_name", group.first);
+        group_dict.SetValue("links", links);
+        ctemplate::ExpandTemplate("includes_versus_link_group", ctemplate::DO_NOT_STRIP, &group_dict, &groups);
+    }
+    template_dict.SetValue("versus_link_groups", groups);
 
     // Render all of the basic files
     for (auto const &f: config.files_to_template) {
