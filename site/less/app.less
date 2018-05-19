@@ -49,6 +49,11 @@ a {
   }
 }
 
+.tool-tip {
+  border-bottom: 1px dashed @titleNavColor;
+  cursor: pointer;
+}
+
 .font-bold {
   font-weight: bold;
 }
@@ -98,6 +103,34 @@ a {
 } // .title-nav
 
 
+ /**
+  * About & Moar Page
+  */
+.about-page {
+  text-align: center;
+}
+.blurb {
+  display: block;
+  font-size: 16px;
+  line-height: 1.6em;
+  margin: 0 auto;
+  text-align: left;
+  width: 60%;
+}
+.moar-page {
+  text-align: center;
+
+  .resource-group {
+    margin-bottom: 20px;
+
+    .link {
+      display: block;
+      margin-bottom: 5px;
+    }
+  }
+}
+
+
 /**
  * Code-Content Styles
  */
@@ -137,39 +170,17 @@ a {
    }
  }
 
+ .code-description {
+   margin-top: 30px;
+ }
+
+
 /**
- * Code Versus Page
+ * Code Versus List Page
  */
 .versus-list {
   .lang-group {
     margin-top: 15px;
-    .link {
-      display: block;
-      margin-bottom: 5px;
-    }
-  }
-}
-
- /**
-  * About & Moar Page
-  */
-.about-page {
-  text-align: center;
-}
-.blurb {
-  display: block;
-  font-size: 16px;
-  line-height: 1.6em;
-  margin: 0 auto;
-  text-align: left;
-  width: 60%;
-}
-.moar-page {
-  text-align: center;
-
-  .resource-group {
-    margin-bottom: 20px;
-
     .link {
       display: block;
       margin-bottom: 5px;

@@ -1,6 +1,6 @@
 name:        'Simple Web Server'
 filename:    'nodejs-simple-web-server.html'
-versus_lang: 'Node-JS'
+versus_lang: 'JavaScript (NodeJS)'
 
 other:
   - 'server.js'

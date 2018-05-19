@@ -1,0 +1,8 @@
+name:        'Higher Order Functions'
+filename:    'js-higher-order-functions.html'
+versus_lang: 'JavaScript'
+
+other:
+  - 'hof.js'
+cpp:
+  - 'hof.cc'

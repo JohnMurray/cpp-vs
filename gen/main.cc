@@ -115,6 +115,16 @@ std::string file_ext_to_prism_language(const fs::path &p) {
     return "none";
 }
 
+/** Expand a string as a template */
+std::string expand_string(std::string const &expand, ctemplate::TemplateDictionary const &dict)
+{
+    std::string out;
+    ctemplate::StringToTemplateCache("__temp__expand_string", expand, ctemplate::DO_NOT_STRIP);
+    ctemplate::ExpandTemplate("__temp__expand_string", ctemplate::DO_NOT_STRIP, &dict, &out);
+    ctemplate::mutable_default_template_cache()->Delete("__temp__expand_string");
+    return out;
+}
+
 /** Most of the magic happens here... enjoy */
 int main(int argc, char** argv) {
     if (argc <= 1) {
@@ -163,20 +173,12 @@ int main(int argc, char** argv) {
             std::exit(1);
         }
         // render the page
-        ctemplate::StringToTemplateCache("template_file", layouts[header.layout], ctemplate::DO_NOT_STRIP);
         template_dict.SetValue("content", header.body);
         template_dict.SetValue("title", header.title);
-        std::string rendered_template;
-        ctemplate::ExpandTemplate("template_file", ctemplate::DO_NOT_STRIP, &template_dict, &rendered_template);
+        std::string rendered_template = expand_string(layouts[header.layout], template_dict);
 
         // second pass to set dynamic data within includes
-        ctemplate::StringToTemplateCache("temp", rendered_template, ctemplate::DO_NOT_STRIP);
-        rendered_template.clear();
-        ctemplate::ExpandTemplate("temp", ctemplate::DO_NOT_STRIP, &template_dict, &rendered_template);
-        ctemplate::mutable_default_template_cache()->Delete("template_file");
-        ctemplate::mutable_default_template_cache()->Delete("temp");
-
-        return rendered_template;
+        return expand_string(rendered_template, template_dict);
     };
 
     // Render all of the "versus" files
@@ -207,6 +209,9 @@ int main(int argc, char** argv) {
                 dict.SetValue("cpp_code", render_code_file("cpp"));
                 dict.SetValue("other_code", render_code_file("other"));
                 dict.SetValue("versus_name", vs_conf["name"].as<std::string>());
+                dict.SetValue("code_description", expand_string(
+                    read_file((dir_entry.path().parent_path() / "description.html").string()),
+                    template_dict));
 
                 std::string rendered;
                 ctemplate::ExpandTemplate("includes_versus", ctemplate::DO_NOT_STRIP, &dict, &rendered);

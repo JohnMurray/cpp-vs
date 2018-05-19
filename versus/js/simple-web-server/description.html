@@ -1,0 +1,33 @@
+<p>
+    <strong class="font-bold">The problem</strong> is to describe a simple web-server that responds with
+    the string "Hello, World" to a simple route (<code>/</code>).
+</p>
+
+<p>
+    <strong class="font-bold">The JavaScript</strong> solution uses <a href="https://nodejs.org">NodeJS</a>
+    (a server-side JavaScript platform) to implement a simple server with a single-route.
+    <strong class="font-bold">The C++</strong> solution, in similar fashion, uses <a href="{{gh}}/ipkn/crow">Crow</a>
+    to define a simple route in the same way.
+</p>
+
+<h4>Digging Deeper</h4>
+<p>
+    C++, as of C++-17, does not have any standard networking features and thus no standard libraries
+    for creating web-servers. <a href="{{gh}}/ipkn/crow">Crow</a> is a simple 3rd-party framework in the style of
+    <a href="http://sinatrarb.com/">Sinatra</a>/<a href="http://flask.pocoo.org/">Flask</a> for
+    creating simple web apps. Other frameworks such as <a href="">Boost Beast</a>
+    or <a href="{{gh}}/cutelyst/cutelyst">Cutelyst</a> also exist to serve this need.
+</p>
+
+<p>
+    It is worth noting that networking in the standard library is coming via the Networking
+    <span title="Technical Specification" class="tool-tip">TS</span>. This
+    <span title="Technical Specification" class="tool-tip">TS</span> has been published, which essentially
+    means these features are available in a experimental/beta mode as people try them out allowing for any
+    minor adjustments before being "written in stone." You can find the status for all specifications on the
+    <a href="https://isocpp.org/std/status">ISO CPP</a> website.
+    <br />
+    Asynchronous networking I/O can also be achieved today with
+    <a href="https://www.boost.org/doc/libs/master/doc/html/boost_asio.html">Boost.Asio</a>,
+    which currently follows the Networking TS in it's implementation.
+</p>

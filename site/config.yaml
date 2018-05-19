@@ -3,11 +3,13 @@ files:
   - about.tpl.html
   - moar.tpl.html
 
-versus_file:   'versus.tpl.html'
-versus_folder: 'versus'
-versus:
-  - name:   'NodeJS'
-    folder: 'node-js'
+# Versus configurations used to generate versus pages
+# from various files.
+versus_file:   'versus.tpl.html' # relative to site dir
+versus_folder: 'versus'          # relative to root dir
+versus:                          # Folders relative to `versus_folder`
+  - name:   'JavaScript'         # Names used in versus-list (main) page
+    folder: 'js'
   - name:   'Ruby'
     folder: 'ruby'
   - name:   'Go'
@@ -19,6 +21,7 @@ variables:
   base_url: '//localhost:1234'
   twitter_url: 'https://www.twitter.com/johnmurray_io'
   github_repo_url: 'https://github.com/Johnmurray/cpp-vs'
+  gh: 'https://github.com'
 
 production:
   variables:
