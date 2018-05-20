@@ -1,7 +1,8 @@
-#CXX = g++-8
 CXX = clang++-6.0
 CXX_LINK_FLAGS = -l ctemplate_nothreads -l boost_system -l boost_filesystem -l yaml-cpp
 CXX_INCLUDE_FLAGS = -I . -I ./gen/
+
+export BUILD_ENV := development
 
 default: clean generate
 
@@ -27,7 +28,7 @@ generate: generate-setup
 	@lessc site/less/app.less build/site/style/app.css
 	@cp site/js/prism.js      build/site/js/prism.js
 	@cp logo/logo.png         build/site/assets/logo.png
-	@build/bin/builder site
+	@ENV=$(BUILD_ENV) build/bin/builder site
 
 .PHONY: serve
 serve: generate-setup

@@ -43,7 +43,8 @@ Config Config::parse(fs::path config_path) {
             conf.template_variables[it->first.as<std::string>()] = it->second.as<std::string>();;
         }
     }
-    if (std::getenv("ENV") == "production") {
+    auto env = std::getenv("ENV");
+    if (env != nullptr && std::string(env) == "production") {
         vs = yaml_conf["production"]["variables"];
         for (auto it = vs.begin(); it != vs.end(); ++it) {
             conf.template_variables[it->first.as<std::string>()] = it->second.as<std::string>();;
