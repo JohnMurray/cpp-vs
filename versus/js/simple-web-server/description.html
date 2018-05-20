@@ -1,16 +1,20 @@
+<h4>What This Code Does</h4>
 <p>
-    <strong class="font-bold">The problem</strong> is to describe a simple web-server that responds with
-    the string "Hello, World" to a simple route (<code>/</code>).
+    The goal is to describe a basic web-server that responds with
+    the string "Hello, World" to the root path of the server (<code>/</code>).
 </p>
 
+<h4>What's the Same</h4>
 <p>
     <strong class="font-bold">The JavaScript</strong> solution uses <a href="https://nodejs.org">NodeJS</a>
-    (a server-side JavaScript platform) to implement a simple server with a single-route.
+    (a server-side JavaScript platform) to implement a simple server with a single-route (example is taken
+    directly from the <a href="https://nodejs.org">nodejs.org</a> website.
     <strong class="font-bold">The C++</strong> solution, in similar fashion, uses <a href="{{gh}}/ipkn/crow">Crow</a>
-    to define a simple route in the same way.
+    to define a simple route using very similar mechanisms (example taken from the <a href="{{gh}}/ipkn/crow">Crow
+    GitHub README</a>).
 </p>
 
-<h4>Digging Deeper</h4>
+<h4>What's Different</h4>
 <p>
     C++, as of C++-17, does not have any standard networking features and thus no standard libraries
     for creating web-servers. <a href="{{gh}}/ipkn/crow">Crow</a> is a simple 3rd-party framework in the style of

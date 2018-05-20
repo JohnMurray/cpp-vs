@@ -22,7 +22,7 @@ generate-setup:
 	@mkdir -p build/site/versus
 
 .PHONY: generate
-generate: generate-setup compile
+generate: generate-setup
 	@echo 'Generating Site...'
 	@lessc site/less/app.less build/site/style/app.css
 	@cp site/js/prism.js      build/site/js/prism.js
@@ -31,5 +31,12 @@ generate: generate-setup compile
 
 .PHONY: serve
 serve: generate-setup
-	@cp -R server/* build/
-	@cd build && bundle exec puma -t 5:5 -p 1234
+	@bundle exec puma -t 5:5 -p 1234
+
+.PHONY: release
+release: clean compile generate
+	@bash -c "git diff-index --quiet HEAD --"
+	#@rm -rf __released_site && git rm -rf __released_site
+	#@mv build/site __released_site && git add __released_site
+	#@git commit -m "Site release: $(date)"
+	#@echo "Latest site added to source control"

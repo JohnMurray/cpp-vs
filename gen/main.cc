@@ -198,7 +198,10 @@ int main(int argc, char** argv) {
                     for (size_t i = 0; i < vs_conf[key].size(); i++) {
                         ctemplate::TemplateDictionary block_dict("template_dict");
                         auto file_path = dir_entry.path().parent_path() / vs_conf[key][i].as<std::string>();
-                        auto file = read_file(file_path);
+                        auto file = str_replace_all(
+                            str_replace_all(read_file(file_path), "<", "&lt;"),
+                            ">",
+                            "&gt;");
                         block_dict.SetValue("code", file);
                         block_dict.SetValue("prism_language", file_ext_to_prism_language(file_path));
                         if (vs_conf[key].size() > 1) block_dict.SetValue("file_name", file_path.filename().string());
