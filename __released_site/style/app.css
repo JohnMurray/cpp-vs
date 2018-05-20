@@ -1,0 +1,329 @@
+/**
+ * HTML Eelement Styles
+ */
+body {
+  background-color: #f8f8f8;
+  color: #333;
+  margin: 0 20px;
+  padding: 0;
+  text-align: center;
+  font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: 300;
+  line-height: 1.5em;
+}
+a {
+  color: #333;
+  text-decoration: none;
+  font-weight: 400;
+  border-bottom: 1px dashed #545454;
+}
+a:hover {
+  color: #444;
+  text-decoration: none;
+}
+/**
+ * Global page styles
+ */
+.page {
+  margin: 0 auto;
+  text-align: left;
+  max-width: 1200px;
+  min-width: 600px;
+}
+.page .content {
+  padding-top: 25px;
+}
+.tool-tip {
+  border-bottom: 1px dashed #545454;
+  cursor: default;
+}
+.font-bold {
+  font-weight: bold;
+}
+/**
+ * Navigation-Bar Styles
+ */
+.title-nav {
+  color: #545454;
+  height: 80px;
+  font-family: "Georgia", serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.8em;
+  margin-top: 5px;
+  /** Top-bar navigation links */
+}
+.title-nav a {
+  color: #545454;
+}
+.title-nav .logo {
+  display: block;
+  float: left;
+  width: 100px;
+}
+.title-nav .navigation {
+  display: inline-block;
+  margin-left: 30px;
+  padding-top: 45px;
+}
+.title-nav .secondary-nav {
+  float: right;
+  margin-right: 120px;
+  margin-top: 45px;
+}
+.title-nav a.primary-nav-link {
+  color: #545454;
+  border-bottom: 2px solid #545454;
+  margin-left: 7px;
+}
+/**
+  * About & Moar Page
+  */
+.about-page {
+  text-align: center;
+}
+.blurb {
+  display: block;
+  font-size: 16px;
+  line-height: 1.6em;
+  margin: 0 auto;
+  text-align: left;
+  width: 60%;
+}
+.moar-page {
+  text-align: center;
+}
+.moar-page .resource-group {
+  margin-bottom: 20px;
+}
+.moar-page .resource-group .link {
+  display: block;
+  margin-bottom: 5px;
+}
+/**
+ * Code-Content Styles
+ */
+.code-vs-title {
+  margin-top: 55px;
+  text-align: center;
+}
+.code-vs-container {
+  display: flex;
+  margin-top: 0;
+  width: 100%;
+}
+.code-vs-container .title {
+  display: block;
+  text-align: center;
+}
+.code-vs-container .title h2 {
+  border-bottom: 3px solid #ccc;
+  display: inline-block;
+  margin: 0 auto;
+}
+.code-vs-container .code-left {
+  display: inline-block;
+  border-right: 1px solid #545454;
+  padding-right: 10px;
+  width: 49%;
+  vertical-align: top;
+}
+.code-vs-container .code-right {
+  display: inline-block;
+  padding-left: 10px;
+  width: 49%;
+  vertical-align: top;
+}
+.code-description {
+  margin-top: 30px;
+}
+/**
+ * Code Versus List Page
+ */
+.versus-list .lang-group {
+  margin-top: 15px;
+}
+.versus-list .lang-group .link {
+  display: block;
+  margin-bottom: 5px;
+}
+/**
+  * Footer Styles
+  */
+.footer {
+  margin-top: 25px;
+}
+.footer a {
+  color: #888;
+  border: none;
+}
+.footer a:hover {
+  color: #888;
+  border-bottom: 1px solid #767676;
+}
+/** Code-Highlighting Styes
+ *  (auto-generated from prism.js site)
+ */
+/* PrismJS 1.14.0
+http://prismjs.com/download.html#themes=prism&languages=clike+c+cpp+ruby+java+python+scala&plugins=line-numbers */
+/**
+ * prism.js default theme for JavaScript, CSS and HTML
+ * Based on dabblet (http://dabblet.com)
+ * @author Lea Verou
+ */
+code[class*="language-"],
+pre[class*="language-"] {
+  color: black;
+  background: none;
+  text-shadow: 0 1px white;
+  font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+  text-align: left;
+  white-space: pre;
+  word-spacing: normal;
+  word-break: normal;
+  word-wrap: normal;
+  line-height: 1.5;
+  -moz-tab-size: 4;
+  -o-tab-size: 4;
+  tab-size: 4;
+  -webkit-hyphens: none;
+  -moz-hyphens: none;
+  -ms-hyphens: none;
+  hyphens: none;
+}
+pre[class*="language-"]::-moz-selection,
+pre[class*="language-"] ::-moz-selection,
+code[class*="language-"]::-moz-selection,
+code[class*="language-"] ::-moz-selection {
+  text-shadow: none;
+  background: #b3d4fc;
+}
+pre[class*="language-"]::selection,
+pre[class*="language-"] ::selection,
+code[class*="language-"]::selection,
+code[class*="language-"] ::selection {
+  text-shadow: none;
+  background: #b3d4fc;
+}
+@media print {
+  code[class*="language-"],
+  pre[class*="language-"] {
+    text-shadow: none;
+  }
+}
+/* Code blocks */
+pre[class*="language-"] {
+  padding: 1em;
+  margin: .5em 0;
+  overflow: auto;
+}
+:not(pre) > code[class*="language-"],
+pre[class*="language-"] {
+  background: #f5f2f0;
+}
+/* Inline code */
+:not(pre) > code[class*="language-"] {
+  padding: .1em;
+  border-radius: .3em;
+  white-space: normal;
+}
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+  color: slategray;
+}
+.token.punctuation {
+  color: #999;
+}
+.namespace {
+  opacity: .7;
+}
+.token.property,
+.token.tag,
+.token.boolean,
+.token.number,
+.token.constant,
+.token.symbol,
+.token.deleted {
+  color: #905;
+}
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+  color: #690;
+}
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string {
+  color: #9a6e3a;
+  background: rgba(255, 255, 255, 0.5);
+}
+.token.atrule,
+.token.attr-value,
+.token.keyword {
+  color: #07a;
+}
+.token.function,
+.token.class-name {
+  color: #DD4A68;
+}
+.token.regex,
+.token.important,
+.token.variable {
+  color: #e90;
+}
+.token.important,
+.token.bold {
+  font-weight: bold;
+}
+.token.italic {
+  font-style: italic;
+}
+.token.entity {
+  cursor: help;
+}
+pre.line-numbers {
+  position: relative;
+  padding-left: 3.8em;
+  counter-reset: linenumber;
+}
+pre.line-numbers > code {
+  position: relative;
+  white-space: inherit;
+}
+.line-numbers .line-numbers-rows {
+  position: absolute;
+  pointer-events: none;
+  top: 0;
+  font-size: 100%;
+  left: -3.8em;
+  width: 3em;
+  /* works for line-numbers below 1000 lines */
+  letter-spacing: -1px;
+  border-right: 1px solid #999;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+.line-numbers-rows > span {
+  pointer-events: none;
+  display: block;
+  counter-increment: linenumber;
+}
+.line-numbers-rows > span:before {
+  content: counter(linenumber);
+  color: #999;
+  display: block;
+  padding-right: 0.8em;
+  text-align: right;
+}
