@@ -38,5 +38,5 @@ release: clean compile generate
 	@bash -c "git diff-index --quiet HEAD --"
 	@rm -rf __released_site && git rm -rf __released_site
 	@mv build/site __released_site && git add __released_site
-	@git commit -m "Site release: $(date)"
+	@date=`date` git commit -m "Site release: $(shell date)"
 	@echo "Latest site added to source control"
