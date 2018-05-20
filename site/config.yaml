@@ -25,4 +25,4 @@ variables:
 
 production:
   variables:
-    base_url: '//cpp-vs.com'
+    base_url: '//cpp-vs.herokuapp.com'

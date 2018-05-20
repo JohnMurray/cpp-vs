@@ -43,6 +43,12 @@ Config Config::parse(fs::path config_path) {
             conf.template_variables[it->first.as<std::string>()] = it->second.as<std::string>();;
         }
     }
+    if (std::getenv("ENV") == "production") {
+        vs = yaml_conf["production"]["variables"];
+        for (auto it = vs.begin(); it != vs.end(); ++it) {
+            conf.template_variables[it->first.as<std::string>()] = it->second.as<std::string>();;
+        }
+    }
     auto versus = yaml_conf["versus"];
     if (versus.IsDefined() && versus.IsSequence()) {
         for (size_t i = 0; i < versus.size(); i++) {
