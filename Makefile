@@ -36,7 +36,7 @@ serve: generate-setup
 .PHONY: release
 release: clean compile generate
 	@bash -c "git diff-index --quiet HEAD --"
-	#@rm -rf __released_site && git rm -rf __released_site
-	#@mv build/site __released_site && git add __released_site
-	#@git commit -m "Site release: $(date)"
-	#@echo "Latest site added to source control"
+	@rm -rf __released_site && git rm -rf __released_site
+	@mv build/site __released_site && git add __released_site
+	@git commit -m "Site release: $(date)"
+	@echo "Latest site added to source control"
