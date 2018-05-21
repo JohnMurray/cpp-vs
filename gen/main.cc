@@ -199,32 +199,31 @@ int main(int argc, char** argv) {
                 auto vs_conf = YAML::LoadFile(dir_entry.path().string());
                 std::cout << "\tAdding versus: " << vs_conf["name"].as<std::string>() << "\n";
 
-                dict.SetValue("name", vs_conf["versus_lang"].as<std::string>());
-                auto render_code_file = [&](std::string &&key) -> std::string {
-                    std::string out;
-                    for (size_t i = 0; i < vs_conf[key].size(); i++) {
-                        ctemplate::TemplateDictionary block_dict("template_dict");
-                        auto file_path = dir_entry.path().parent_path() / vs_conf[key][i].as<std::string>();
-                        auto file = str_replace_all(
-                            str_replace_all(read_file(file_path), "<", "&lt;"),
-                            ">",
-                            "&gt;");
-                        block_dict.SetValue("code", file);
-                        block_dict.SetValue("prism_language", file_ext_to_prism_language(file_path));
-                        if (vs_conf[key].size() > 1) block_dict.SetValue("file_name", file_path.filename().string());
-                        ctemplate::ExpandTemplate("includes_versus_block", ctemplate::DO_NOT_STRIP, &block_dict, &out);
-                    }
-                    return out;
+                dict.SetValue("lang_name", vs_conf["versus_lang"].as<std::string>());
+                auto render_code_file = [&](std::string const &filename) -> std::string {
+                    ctemplate::TemplateDictionary block_dict("template_dict");
+                    auto file_path = dir_entry.path().parent_path() / filename;
+                    auto file = str_replace_all(
+                        str_replace_all(read_file(file_path), "<", "&lt;"),
+                        ">",
+                        "&gt;");
+                    block_dict.SetValue("code", file);
+                    block_dict.SetValue("prism_language", file_ext_to_prism_language(file_path));
+                    std::string ret;
+                    ctemplate::ExpandTemplate("includes_versus_block", ctemplate::DO_NOT_STRIP, &block_dict, &ret);
+                    return ret;
                 };
-                dict.SetValue("cpp_code", render_code_file("cpp"));
-                dict.SetValue("other_code", render_code_file("other"));
-                dict.SetValue("versus_name", vs_conf["name"].as<std::string>());
-                dict.SetValue("code_description", expand_string(
-                    read_file((dir_entry.path().parent_path() / "description.html").string()),
-                    template_dict));
 
                 std::string rendered;
-                ctemplate::ExpandTemplate("includes_versus", ctemplate::DO_NOT_STRIP, &dict, &rendered);
+                for (size_t i = 0; i < vs_conf["versuses"].size(); i++) {
+                    dict.SetValue("versus_name", vs_conf["versuses"][i]["title"].as<std::string>());
+                    dict.SetValue("cpp_code", render_code_file(vs_conf["versuses"][i]["cpp"].as<std::string>()));
+                    dict.SetValue("other_code", render_code_file(vs_conf["versuses"][i]["other"].as<std::string>()));
+                    dict.SetValue("code_description", expand_string(
+                        read_file((dir_entry.path().parent_path() / vs_conf["versuses"][i]["description"].as<std::string>()).string()),
+                        template_dict));
+                    ctemplate::ExpandTemplate("includes_versus", ctemplate::DO_NOT_STRIP, &dict, &rendered);
+                }
                 template_dict.SetValue("versus_content", rendered);
 
                 std::ofstream versus_file;

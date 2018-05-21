@@ -1,0 +1,75 @@
+<h4>What This Code Does</h4>
+<p>
+    The goal of the above code is to combine functions together in order to
+    create new functions. The composability of functions to generate new functions
+    is a form of code-reuse and application of
+    <span title="Don't Repeat Yourself" class="tool-tip">DRY</span> typically found
+    in more functional or function-oriented languages. Our specific goal is to combine
+    <code>collect</code>, which iterates over collection of items, with a function that
+    works on single-elements, to create a new function that works over a collection of
+    elements, to calculate an aggregate value.
+</p>
+
+<h4>What's the Same</h4>
+<p>
+    The structure of both solutions is identical. While both are idiomatic, both are also
+    very raw. <strong class="text-bold">JavaScript</strong> has many libraries to help
+    with this, such as <a href="https://lodash.com/">Lodash</a>. Similarly, C++ has
+    <a href="{{gh}}/boostorg/hof">Boost HOF</a> which contains utilities specifically for
+    <span title="Higher Order Functions" class="tool-tip">HOF</span> programming in C++.
+</p>
+
+<h4>What's Different</h4>
+<p>
+    The differences mostly lie in type declarations and syntax. While the structure is
+    the same, C++ must define all of the parameter and return types. Additionally, C++
+    must make use of "generics" in order to account for different numeric types, such as
+    <code>int</code>, <code>float</code>, <code>double</code>, etc. This is done with
+    what is called C++ templates. Templates are expanded at compile-time into concrete
+    implementations.
+</p>
+<pre class="language-cpp line-numbers"><code>// When used in code, a version is compiled to match the usage.
+template&lt;typename T&gt;
+sum(T a, T b) {
+    return a + b;
+}
+
+void main() {
+    sum&lt;int&gt;(1, 2);
+    sum&lt;double&gt;(1.0, 2.0);
+    // this causes 2 specialized versions to be compiled
+}
+</code></pre>
+<p>
+    In Javascript, all checking is done at runtime. That is to say, if we were to sum or multiply
+    two types that were not compatible (e.g <code>4 * {some: "object"}</code>)), we would not know
+    until the program ran. With C++, we will know at compile time when the templates are expanded
+    into concrete functions. At that point we will know if the types can be added, multiplied, etc.
+    Of course, most modern IDEs will give you some advanced notice as well. :-)
+</p>
+<p>
+    The second noticeable difference is the lambda syntax and the type is represented.
+    <code>std::function</code> is used to represent the return and parameter types like so:
+</p>
+<pre class="language-cpp"><code>std::function&lt;ReturnType (Arg1Type, Arg2Type, Arg3Type)&gt;
+</code></pre>
+<p>
+    The lambda itself has 4 parts. The capture, the parameters, the return type, and the body.
+</p>
+<pre class="language-cpp"><code>int capture = 5;
+    
+auto lambda = [capture](int param1, int param2) -> int {
+    return param1 + param2 + capture;
+}
+</code></pre>
+<p>
+    The <code>[capture]</code> part is a list of variables we'd like to "capture" in our lambda.
+    These are things in our local scope we'd like to make available to our lambda. The parameters
+    are pretty self-explanatory and what comes after the <code>-&gt</code>, but before the
+    <code>{</code> is the return type. And, of course, what's in the curly-braces in the function
+    body.
+</p>
+<p>
+    Note the use of <code>auto</code> here is just a short-hand to avoid writing the full type of
+    the lambda using <code>std::function</code>.
+</p>
