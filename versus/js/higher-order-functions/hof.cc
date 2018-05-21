@@ -18,9 +18,10 @@ std::function<U (T)> collect(std::function<U (U, U)> fn, U init) {
 
 int main() {
     auto sumListInt = collect<std::vector<int>, int>(sum<int>, 0);
-    auto multListInt = collect<std::vector<int>, int>([](int a, int b) -> int {
-        return a * b;
-    }, 1);
+    auto multListInt = collect<std::vector<int>, int>(
+        [](int a, int b) -> int {
+            return a * b;
+        }, 1);
 
     sumListInt(std::vector<int> {{1, 2, 3, 4}});
     // returns 10
