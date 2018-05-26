@@ -5,15 +5,9 @@
       alt="cpp-vs">
 </p>
 
-Comparing C++ to other languages to showcase modern C++ and make 
-it less scary.
-
-# Not Yet Launched
-
-__This site is not yet live, you can keep reading but it's more of a glimpse into
-the future more than anything.__
-
-----
+This is an experiment/idea I had to see if people would find it useful, in their
+endeavour to learn C++, to compare similar examples to a language they may know
+better.
 
 This project generates the site/code for [cpp-vs](cpp-vs.com).All code samples is
 licensed under the Apache V2 license, as is this site. If you whish to contribute

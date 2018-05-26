@@ -2,7 +2,8 @@ name:        'Process Coordination'
 filename:    'go-process-coordination.html'
 versus_lang: 'Go'
 
-other:
-  - 'coordination.go'
-cpp:
-  - 'coordination.cc'
+versuses:
+  - title: 'Process Coordination'
+    other: 'coordination.go'
+    cpp:   'coordination.cc'
+    description: 'description.html'

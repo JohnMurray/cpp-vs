@@ -7,10 +7,10 @@ T sum(T a, T b) {
 }
 
 int main() {
-    std::function<int(int)> addFive = boost::hof::partial(
-            BOOST_HOF_LIFT(sum<int>)
+    std::function<int(int)> addFiveInt = boost::hof::partial(
+            BOOST_HOF_LIFT(sum)
         )(5);
 
-    addFive(10);
+    addFiveInt(10);
     // returns 15
 }

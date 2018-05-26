@@ -243,7 +243,7 @@ int main(int argc, char** argv) {
         std::string links;
         for (auto const &link: group.second) {
             ctemplate::TemplateDictionary link_dict("links");
-            link_dict.SetValue("name", link.first);
+            link_dict.SetValue("name", link.first.substr(3));
             link_dict.SetValue("link", link.second);
             ctemplate::ExpandTemplate("includes_versus_link_group_link", ctemplate::DO_NOT_STRIP, &link_dict, &links);
         }

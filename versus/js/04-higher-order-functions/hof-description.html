@@ -1,0 +1,33 @@
+<h4>What This Code Does</h4>
+<p>
+    The goal of the above code is to combine functions together in order to
+    create new functions. The composability of functions to generate new functions
+    is a form of code-reuse and application of
+    <span title="Don't Repeat Yourself" class="tool-tip">DRY</span> typically found
+    in more functional or function-oriented languages. Our specific goal is to combine
+    <code>collect</code>, which iterates over collection of items, with a function that
+    works on single-elements, to create a new function that works over a collection of
+    elements, to calculate an aggregate value.
+</p>
+
+<h4>What's the Same</h4>
+<p>
+    The structure of both solutions is identical. While both are idiomatic, both are also
+    very raw. <strong class="text-bold">JavaScript</strong> has many libraries to help
+    with this, such as <a href="https://lodash.com/">Lodash</a>. Similarly, C++ has
+    <a href="{{gh}}/boostorg/hof">Boost HOF</a> which contains utilities specifically for
+    <span title="Higher Order Functions" class="tool-tip">HOF</span> programming in C++.
+</p>
+
+<h4>What's Different</h4>
+<p>
+    The differences mostly lie in type declarations, syntax, and the necessity to use generic-like
+    programming in order to work for multiple types (<code>int</code>, <code>float</code>, etc).
+    Most of these differences are covered in the <a href="{{base_url}}/versus/js-lambdas">Lambdas</a>
+    versus.
+</p>
+<p>
+    This is actually a really good thing! C++, being a language incredibly focused on performance
+    and low-level details, can still make use of higher-level language features one would expect
+    to find in modern programming languages.
+</p>

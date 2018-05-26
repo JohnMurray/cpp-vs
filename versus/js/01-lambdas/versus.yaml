@@ -1,0 +1,17 @@
+name:        '01-Lambdas'
+filename:    'js-lambdas.html'
+versus_lang: 'JavaScript'
+
+versuses:
+  - title: 'Lambdas'
+    other: 'lambda.js'
+    cpp:   'lambda.cc'
+    description: 'description.html'
+  - title: 'Capturing Local State'
+    other: 'capture.js'
+    cpp:   'capture.cc'
+    description: 'capture-description.html'
+  - title: 'Consuming'
+    other: 'consuming.js'
+    cpp:   'consuming.cc'
+    description: 'consuming-description.html'

@@ -1,5 +1,6 @@
 @textColor: #333;
 @titleNavColor: #545454;
+@greyWhite: #f1f1f1;
 @hoverLinkColor: #444;
 @backgroundColor: #f8f8f8;
 
@@ -54,7 +55,19 @@ a {
   cursor: default;
 }
 
-.font-bold {
+p.note {
+  background-color: @greyWhite;
+  border-left: 3px solid @titleNavColor;
+  color: @titleNavColor;
+  font-size: 14px;
+  font-style: italic;
+  margin-left: 20px;
+  padding-bottom: 5px;
+  padding-left: 10px;
+  padding-top: 5px;
+}
+
+strong, .font-bold, .text-bold {
   font-weight: bold;
 }
 
