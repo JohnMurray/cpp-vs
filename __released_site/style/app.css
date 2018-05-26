@@ -40,7 +40,20 @@ a:hover {
   border-bottom: 1px dashed #545454;
   cursor: default;
 }
-.font-bold {
+p.note {
+  background-color: #f1f1f1;
+  border-left: 3px solid #545454;
+  color: #545454;
+  font-size: 14px;
+  font-style: italic;
+  margin-left: 20px;
+  padding-bottom: 5px;
+  padding-left: 10px;
+  padding-top: 5px;
+}
+strong,
+.font-bold,
+.text-bold {
   font-weight: bold;
 }
 /**
