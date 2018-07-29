@@ -22,6 +22,8 @@ int main() {
             std::cout << "Successful email sent to: " << to << "\n";
         },
         [](std::string to) -> void {
-            std::cout << "OH NO! Very important email not sent to " << to << "\n";
+            std::cout << "OH NO! Very important email not sent to "
+                      << to
+                      << "\n";
         });
 }
