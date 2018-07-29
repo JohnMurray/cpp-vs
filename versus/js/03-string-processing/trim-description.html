@@ -1,0 +1,53 @@
+<h4>What This Code Does</h4>
+<p>
+    This code simply trims leading and trailing whitespace from a string.
+</p>
+
+<h4>What's the Same</h4>
+<p>
+    Almost nothing.
+</p>
+
+<h4>What's Different</h4>
+<p>
+    Almost everything.
+</p>
+
+<p>
+    The most obvious difference is that the C++ version goes about writing the
+    <i>implementation</i> for <code>trim</code> rather than using something from
+    the standard library. Why is that?
+</p>
+<p>
+    Well... C++ can, at times, be very minimal in its stdlib. That is to say that no
+    <code>trim</code> function exists directly. However, using the ability to remove
+    sub-sections of the <code>std::string</code> along with some utilities from the
+    <code>&lt;algorithm&gt;</code> header (<code>std::find_if</code>), a simple and
+    efficient version can be created.
+</p>
+<p>
+    In practice, most organizations will either develop their own internal utility
+    libraries that would likely include these functions or adopt an open-source
+    implementation such as <a href="https://www.bost.org">Boost</a>. As an example,
+    if we were using Boost, we would simply write:
+<pre class="language-cpp"><code>#include &lt;boost/algorithm/string.hpp&gt;
+
+boost::trim(msg);
+</code></pre>
+</p>
+<p>
+    Obviously there is a bit of code missing (the <code>main</code> function and
+    declaration of <code>msg</code>, but you can see that the important code is
+    now equivalent to the JS version.
+</p>
+<p>
+    The other difference worth pointing out is that the C++ does the modification to
+    the string in-place. If we were to examine the <code>msg</code> in the JavaScript
+    version after running trim, you'll notice nothing was changed.
+</p>
+<p>
+<pre class="language-js"><code>var msg = " \t\n\t Hello, World! \t\n\t ";
+msg.trim();       // value returned is "Hello, World!"
+console.log(msg); // prints " \t\n\t Hello, World! \t\n\t "
+</code></pre>
+</p>
