@@ -241,9 +241,12 @@ int main() {
             std::cout &lt;&lt; "Successful email sent to: " &lt;&lt; to &lt;&lt; "\n";
         },
         [](std::string to) -&gt; void {
-            std::cout &lt;&lt; "OH NO! Very important email not sent to " &lt;&lt; to &lt;&lt; "\n";
+            std::cout &lt;&lt; "OH NO! Very important email not sent to "
+                      &lt;&lt; to
+                      &lt;&lt; "\n";
         });
-}</code></pre>
+}
+</code></pre>
   </div>
   <div class='code-right'>
     <div class="title"><h2>JavaScript</h2></div>
