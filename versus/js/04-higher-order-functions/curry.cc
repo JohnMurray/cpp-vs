@@ -24,13 +24,10 @@ auto curry2 = [](auto func) {
 
 int main()
 {
-	vector<int> head = {0, 1, 2};
-	vector<int> tail = {7, 8, 9};
-
 	auto concatCurried = curry2(concat<int>);
-	auto prepend012 = concatCurried(head);
+	auto prepend012 = concatCurried(vector<int>{0, 1, 2});
 
-	prepend012(tail);
+	prepend012(vector<int>{7, 8, 9});
 	// returns  [0, 1, 2, 7, 8, 9]
 
 	// --- Example with Auto-Currying ---

@@ -11,13 +11,10 @@ const curry2 = function(func){
 	};
 };
 
-const head = [0, 1, 2];
-const tail = [7, 8, 9];
-
 const concatCurried = curry2(concat);
-const prepend012 = concatCurried(head);
+const prepend012 = concatCurried([0, 1, 2]);
 
-prepend012(tail);
+prepend012([7, 8, 9]);
 // returns [0, 1, 2, 7, 8, 9]
 
 // --- Example with Auto-Currying ---
