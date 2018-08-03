@@ -7,7 +7,7 @@
 
 <!-- Bootstrap CSS -->
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
-<link rel="stylesheet" href="//www.cpp-vs.com/style/app.css">
+<link rel="stylesheet" href="//localhost:1234/style/app.css">
 
     <title></title>
   </head>
@@ -18,16 +18,16 @@
       <!-- Title & Navigation -->
       <div class="title-nav">
     <div class="logo">
-        <img src="//www.cpp-vs.com/assets/logo.png" height="80" />
+        <img src="//localhost:1234/assets/logo.png" height="80" />
     </div>
     
     <div class="secondary-nav">
-        <a class="primary-nav-link" href="//www.cpp-vs.com/about">About</a>
+        <a class="primary-nav-link" href="//localhost:1234/about">About</a>
         <a class="primary-nav-link" href="https://www.twitter.com/johnmurray_io">Feedback</a>
     </div>
 
     <div class="navigation">
-        <a class="primary-nav-link" href="//www.cpp-vs.com/">Versus</a>
+        <a class="primary-nav-link" href="//localhost:1234/">Versus</a>
     </div>
 </div>
 
@@ -131,7 +131,7 @@ multList([1, 2, 3, 4])
 <p>
     The differences mostly lie in type declarations, syntax, and the necessity to use generic-like
     programming in order to work for multiple types (<code>int</code>, <code>float</code>, etc).
-    Most of these differences are covered in the <a href="//www.cpp-vs.com/versus/js-lambdas">Lambdas</a>
+    Most of these differences are covered in the <a href="//localhost:1234/versus/js-lambdas">Lambdas</a>
     versus.
 </p>
 <p>
@@ -197,11 +197,165 @@ addFive(10);
 <h4>What's Different</h4>
 <p>
     Again, the main differences here are the types
-    (see <a href="//www.cpp-vs.com/versus/js-lambdas">Lambdas</a>) and the libraries
+    (see <a href="//localhost:1234/versus/js-lambdas">Lambdas</a>) and the libraries
     used. You may note one small difference that an additional utility is used in the C++ code
     that is not present in the JavaScript version, <code>BOOST_HOF_LIFT</code>. This is a simple
     utility that allows us to use <code>partial</code> on generic (templated) functions.
 </p>
+</div><div class="code-vs-title"><h3>Function Currying</h3></div>
+<div class='code-vs-container'>
+  <div class='code-left'>
+    <div class="title"><h2>Cpp</h2></div>
+    <pre><code class="language-cpp line-numbers">#include &lt;iostream&gt;
+#include &lt;boost/hof.hpp&gt;
+#include &lt;functional&gt;
+#include &lt;vector&gt;
+
+using namespace std;
+namespace hof = boost::hof;
+
+template&lt;typename T&gt;
+vector&lt;T&gt; concat(const vector&lt;T&gt;& a, const vector&lt;T&gt;& b) {
+	vector&lt;T&gt; ret(a.cbegin(), a.cend());
+	ret.insert(ret.end(), b.cbegin(), b.cend());
+	return ret;
+}
+
+// --- Example with vanilla Currying ---
+auto curry2 = [](auto func) {
+	return [=](auto x) {
+		return [=](auto y) {
+			return func(x, y);
+		};
+	};
+};
+
+int main()
+{
+	auto concatCurried = curry2(concat&lt;int&gt;);
+	auto prepend012 = concatCurried(vector&lt;int&gt;{0, 1, 2});
+
+	prepend012(vector&lt;int&gt;{7, 8, 9});
+	// returns  [0, 1, 2, 7, 8, 9]
+
+	// --- Example with Auto-Currying ---
+	auto sum = [](auto a, auto b){
+		return a + b;
+	};
+
+	auto biOp = [](auto func, auto a, auto b) {
+		return func(a, b);
+	};
+
+	auto biOpCurried = hof::partial(biOp);
+	auto plus = biOpCurried(sum);
+	auto addFivePFive = plus(5.5);
+
+	addFivePFive(4.5);
+	// returns 10
+}</code></pre>
+  </div>
+  <div class='code-right'>
+    <div class="title"><h2>JavaScript</h2></div>
+    <pre><code class="language-javascript line-numbers">const concat = function(a, b){
+	return a.concat(b);
+};
+
+// --- Example with vanilla Currying ---
+const curry2 = function(func){
+	return function(x){
+		return function(y){
+			return func(x, y);
+		};
+	};
+};
+
+const concatCurried = curry2(concat);
+const prepend012 = concatCurried([0, 1, 2]);
+
+prepend012([7, 8, 9]);
+// returns [0, 1, 2, 7, 8, 9]
+
+// --- Example with Auto-Currying ---
+const _ = require('lodash');
+
+const sum = function(a, b) {
+	return a + b;
+};
+	
+const biOp = function(a, b, c) {
+	return a(b + c);
+};
+
+// use auto-currying for functions with fixed arity of func.length
+const biOpCurried = _.curry(biOp);
+const plus = biOpCurried(sum);
+const addFivePFive = plus(5.5);
+	
+addFivePFive(4.5);
+// returns 10
+</code></pre>
+  </div>
+</div>
+
+<div class="code-description blurb">
+  <h4>What This Code Does</h4>
+<p>
+    <em>Function Currying</em> is the creation of <code>n</code> functions with a single argument from
+	a single function with <code>n</code> arguments. Calling a curried function with an argument is like
+	partially applying that argument. <em>Partial Application</em> and <em>Currying</em> are very similar,
+	however <em>Currying</em> a function is done <em>without</em> providing any argument to the
+	original function.
+</p>
+<p>
+	In the example of vanilla currying, the curry HOF implementation is given for binary functions.
+	It is used to curry a binary concat function for arrays.
+	By calling the curried function with an array of integers from 0 to 2 we arrive at a new function which prepends
+	these values to it's argument (i.e. the second parameter of the concat function).
+</p>
+<p>
+	In the second exmaple with auto-currying we take a binary function invoker <code>biOp</code> with three arguments and create a new curried
+	function by using a utility function. By calling the curried function in turn with the separate arguments
+	of the original function we receive more and more specialised (and still curried) functions:
+	First a binary sum function <code>plus</code> and last a function which just adds <code>5.5</code>.
+</p>
+<h4>What's the Same</h4>
+<p>
+    Both <strong class="text-bold">the Javascript</strong> and <strong class="text-bold">
+    the C++</strong> solutions make use of 3rd party libraries
+	(<a href="https://lodash.com">Lodash</a> and <a href="https://github.com/boostorg/hof">HOF</a> respectively)
+	to create a curried function from <code>biOp</code>. (Hint: For Functional Programming in JavaScript other
+	libraries like <a href="https://ramdajs.com">Ramda</a>  maybe more suited.)
+</p>
+<h4>What's Different</h4>
+<p>
+	<h5>Type deduction with auto</h5>
+	<p>
+		In order to remove syntactic clutter from the C++ solution, the templated functions are replaced
+		by generic lambdas with <code>auto</code>-typed parameters and return values.
+
+		<code>auto</code> lets the compiler deduce the type of a variable based upon the types of initialisation
+		and return values. Think of
+
+<pre class="language-js"><code>template&lt;typename X, typename Y&gt;
+Y some_function(X x){ // return some result Y };</code></pre>
+
+		as
+
+<pre class="language-js"><code>auto some_function(auto x){ /*return some result Y */ };</code></pre>
+
+    It makes the code easier to read and more resilient to changes. For instance in the second example 
+    the compiler infers the types of <code>a</code> and <code>b</code> from <code>5.5</code> and
+    <code>4.5</code> respectively.
+
+		Better explanations can be found <a href="https://stackoverflow.com/a/7577088/564642">elsewhere</a>.
+	</p>
+
+    When using <a href="//localhost:1234/versus/js-lambdas">Lambdas</a>, the code to define the vanilla
+    versions of the curry functions <code>curry</code> is nearly identical. Also the code invoking
+    the curried functions is not much different.
+</p>
+
 </div>
 
       </div>
@@ -221,7 +375,7 @@ addFive(10);
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
 
 <!-- Prism JS (code highlighting) -->
-<script src="//www.cpp-vs.com/js/prism.js"></script>
+<script src="//localhost:1234/js/prism.js"></script>
 
   </body>
 </html>
