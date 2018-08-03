@@ -34,14 +34,23 @@
 		by generic lambdas with <code>auto</code>-typed parameters and return values.
 
 		<code>auto</code> lets the compiler deduce the type of a variable based upon the types of initialisation
-		and return values. Think of <code>template&lt;typename X, typename Y&gt;Y func(X x){ // return some result Y };</code>
-		as <code>auto func(auto x){ //return some result Y };</code>. It makes the code easier to read and more
-		resilient to changes. For instance in the second example the compiler infers the types of <code>a</code>
-		and <code>b</code> from <code>5.5</code> and <code>4.5</code> respectively.
+		and return values. Think of
+
+<pre class="language-js"><code>template&lt;typename X, typename Y&gt;
+Y some_function(X x){ // return some result Y };</code></pre>
+
+		as
+
+<pre class="language-js"><code>auto some_function(auto x){ /*return some result Y */ };</code></pre>
+
+    It makes the code easier to read and more resilient to changes. For instance in the second example 
+    the compiler infers the types of <code>a</code> and <code>b</code> from <code>5.5</code> and
+    <code>4.5</code> respectively.
 
 		Better explanations can be found <a href="https://stackoverflow.com/a/7577088/564642">elsewhere</a>.
 	</p>
 
-    When using <a href="{{base_url}}/versus/js-lambdas">Lambdas</a>, the code to define the vanilla versions of the
-curry functions <code>curry</code> is nearly identical. Also the code invoking the curried functions is not much different.
+    When using <a href="{{base_url}}/versus/js-lambdas">Lambdas</a>, the code to define the vanilla
+    versions of the curry functions <code>curry</code> is nearly identical. Also the code invoking
+    the curried functions is not much different.
 </p>
