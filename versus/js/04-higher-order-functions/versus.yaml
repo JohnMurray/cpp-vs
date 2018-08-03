@@ -11,3 +11,7 @@ versuses:
     other: 'partial.js'
     cpp:   'partial.cc'
     description: 'partial-description.html'
+  - title: 'Function Currying'
+    other: 'curry.js'
+    cpp:   'curry.cc'
+    description: 'curry-description.html'

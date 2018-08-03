@@ -1,0 +1,47 @@
+<h4>What This Code Does</h4>
+<p>
+    <em>Function Currying</em> is the creation of <code>n</code> functions with a single argument from
+	a single function with <code>n</code> arguments. Calling a curried function with an argument is like
+	partially applying that argument. <em>Partial Application</em> and <em>Currying</em> are very similar,
+	however <em>Currying</em> a function is done <em>without</em> providing any argument to the
+	original function.
+</p>
+<p>
+	In the example of vanilla currying, the curry HOF implementation is given for binary functions.
+	It is used to curry a binary concat function for arrays.
+	By calling the curried function with an array of integers from 0 to 2 we arrive at a new function which prepends
+	these values to it's argument (i.e. the second parameter of the concat function).
+</p>
+<p>
+	In the second exmaple with auto-currying we take a binary function invoker <code>biOp</code> with three arguments and create a new curried
+	function by using a utility function. By calling the curried function in turn with the separate arguments
+	of the original function we receive more and more specialised (and still curried) functions:
+	First a binary sum function <code>plus</code> and last a function which just adds <code>5.5</code>.
+</p>
+<h4>What's the Same</h4>
+<p>
+    Both <strong class="text-bold">the Javascript</strong> and <strong class="text-bold">
+    the C++</strong> solutions make use of 3rd party libraries
+	(<a href="https://lodash.com">Lodash</a> and <a href="https://github.com/boostorg/hof">HOF</a> respectively)
+	to create a curried function from <code>biOp</code>. (Hint: For Functional Programming in JavaScript other
+	libraries like <a href="https://ramdajs.com">Ramda</a>  maybe more suited.)
+</p>
+<h4>What's Different</h4>
+<p>
+	<h5>Type deduction with auto</h5>
+	<p>
+		In order to remove syntactic clutter from the C++ solution, the templated functions are replaced
+		by generic lambdas with <code>auto</code>-typed parameters and return values.
+
+		<code>auto</code> lets the compiler deduce the type of a variable based upon the types of initialisation
+		and return values. Think of <code>template&lt;typename X, typename Y&gt;Y func(X x){ // return some result Y };</code>
+		as <code>auto func(auto x){ //return some result Y };</code>. It makes the code easier to read and more
+		resilient to changes. For instance in the second example the compiler infers the types of <code>a</code>
+		and <code>b</code> from <code>5.5</code> and <code>4.5</code> respectively.
+
+		Better explanations can be found <a href="https://stackoverflow.com/a/7577088/564642">elsewhere</a>.
+	</p>
+
+    When using <a href="{{base_url}}/versus/js-lambdas">Lambdas</a>, the code to define the vanilla versions of the
+curry functions <code>curry</code> is nearly identical. Also the code invoking the curried functions is not much different.
+</p>
