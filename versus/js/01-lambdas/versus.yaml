@@ -1,6 +1,7 @@
 name:        '01-Lambdas'
 filename:    'js-lambdas.html'
 versus_lang: 'JavaScript'
+title:       'C++ vs JS - Lambdas'
 
 versuses:
   - title: 'Lambdas'
