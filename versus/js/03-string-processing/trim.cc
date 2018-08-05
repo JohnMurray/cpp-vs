@@ -5,9 +5,11 @@ int main() {
     std::string msg = " \t\n\t Hello, World! \t\n\t ";
 
     auto ltrim = [](std::string &in) {
-        in.erase(in.begin(), std::find_if(in.begin(), in.end(), [](int ch) {
-            return !std::isspace(ch);
-        }));
+        in.erase(in.begin(), std::find_if(in.begin(), in.end(),
+            [](int ch) {
+                return !std::isspace(ch);
+            }
+        ));
     };
 
     auto rtrim = [](std::string &in) {

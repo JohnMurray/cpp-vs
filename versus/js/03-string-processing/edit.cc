@@ -18,6 +18,7 @@ int main() {
     // msg is now "Total Prices -> (1.23)"
 
     msg = "Total Price -> [1.23]";    
-    boost::replace_all_regex(msg, boost::regex("[\\[\\]\\->]"), std::string(""));
+    boost::replace_all_regex(msg, boost::regex("[\\[\\]\\->]"),
+        std::string(""));
     // msg is not "Total Prices  1.23"
 }

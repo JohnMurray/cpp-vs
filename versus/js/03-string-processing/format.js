@@ -2,7 +2,8 @@ const name = "FOOBAR";
 const max_gain = 0.15;
 const max_loss = 0.76;
 
-console.log(`Weekly Changes: ${name} +${max_gain * 100}% -${max_loss * 100}%`);
+console.log(`Weekly Changes: ${name} +${max_gain * 100}%` +
+    ` -${max_loss * 100}%`);
 // prints "Weekly Changes: FOOBAR +15% -76%"
 
 // Print list as a right-aligned list of hex values
