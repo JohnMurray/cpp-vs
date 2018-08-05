@@ -6,8 +6,9 @@
 </p>
 
 This is an experiment/idea I had to see if people would find it useful, in their
-endeavour to learn C++, to compare similar examples to a language they may know
-better.
+endeavour to learn C++, to compare similar examples to a language they may already
+know. This does mean that this site is targeted toward those that are _not_ learning
+C++ as their first language.
 
 This project generates the site/code for [cpp-vs](cpp-vs.com).All code samples is
 licensed under the Apache V2 license, as is this site. If you whish to contribute
@@ -48,7 +49,7 @@ issue so we can discuss. Please use the following template for your issues
 ```
 TITLE: C++ VS LANGUAGE - PROBLEM or CODE-EXAMPLE
 
-Please write a few sentances describing what you'd like added.
+Please write a few sentences describing what you'd like added.
 
 Why is this a good problem/example for the site? How does it meet the goals?
 
@@ -68,7 +69,7 @@ In order to build the site, you will need to have the following dependencies ins
 + [yaml-cpp](https://github.com/jbeder/yaml-cpp) (tested with v0.5)
 + Compiler with C++ 17 support (mostly cause I haven't tested with anything else)
 
-You can generate the site by running `make`.
+You can generate the site by running `make compile && make generate`.
 
 
 ## License
