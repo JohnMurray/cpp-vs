@@ -235,7 +235,11 @@ int main(int argc, char** argv) {
                 versus_file << render_file_with_layout(config.versus_file, vs_conf["title"].as<std::string>());
                 versus_file.close();
 
-                versus_links[pair.first][vs_conf["name"].as<std::string>()] = "versus/" + vs_conf["filename"].as<std::string>();
+                auto filename = vs_conf["filename"].as<std::string>();
+                if (filename.substr(filename.length() - 5) == ".html") {
+                    filename = filename.substr(0, filename.length() - 5);
+                }
+                versus_links[pair.first][vs_conf["name"].as<std::string>()] = "versus/" + filename;
             }
         }
     }
