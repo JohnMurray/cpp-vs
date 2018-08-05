@@ -1,0 +1,43 @@
+<h4>What This Code Does</h4>
+<p>
+    This code demonstrates how string formatting is done with two very simple examples.
+    The first simply prints out a stock-symbol and it's maximum change (positive and
+    negative), representing a floating-point number as a percentage. The second example
+    prints a list of base-10 integers as their hex value. All hex values have a prefix
+    of <code>0x</code> and are eight characters wide (left-padded with zeros).
+</p>
+
+<h4>What's the Same</h4>
+<p>
+    Both examples shown have to manually format the percentage values in the first example.
+</p>
+
+<h4>What's Different</h4>
+<p>
+    While the JS version relies on string interpolation to provide formatting, C++ relies on
+    an <code>iostream</code> (Input/Output Stream). An <code>iostream</code> is more than just
+    a simple mechanism for printing as it allows us to specify transformers that apply to all
+    values sent through the stream. Not in particular this bit of code:
+</p>
+<pre class="language-cpp"><code> std::cout << std::hex << std::uppercase << std::setw(8)
+    << std::setfill('0') << num;
+</code></pre>
+<p>
+    These modifiers inform the stream that we want to print hex values, in uppercase, with a
+    width of 8 characters, and a "fill" of <code>0</code> (our left-padding). Then we print
+    the value <code>num</code>, which passes through all of these filters we've set on our
+    stream. While this can be an extremely powerful abstraction, we can see that it is also
+    a little cumbersome when data is interleaved with other output in which we don't want to
+    apply the same formatting rules. We use the <code>state</code> object to constantly reset
+    our stream state before printing other values.
+</p>
+<p>
+    Because of C++'s close relationship with C, we can also use the
+    <code>printf</code>/<code>sprintf</code> family of functions for formatting, in which our
+    hex-formatting code would look like:
+</p>
+<pre class="language-cpp"><code>printf("\t0x%08X\n", num);</code></pre>
+<p>
+    This approach is also often the recommended approach when performing formatting in a
+    performance-critical/sensitive portion of code.
+</p>

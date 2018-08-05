@@ -36,12 +36,12 @@
 		<code>auto</code> lets the compiler deduce the type of a variable based upon the types of initialisation
 		and return values. Think of
 
-<pre class="language-js"><code>template&lt;typename X, typename Y&gt;
+<pre class="language-cpp"><code>template&lt;typename X, typename Y&gt;
 Y some_function(X x){ // return some result Y };</code></pre>
 
 		as
 
-<pre class="language-js"><code>auto some_function(auto x){ /*return some result Y */ };</code></pre>
+<pre class="language-cpp"><code>auto some_function(auto x){ /*return some result Y */ };</code></pre>
 
     It makes the code easier to read and more resilient to changes. For instance in the second example 
     the compiler infers the types of <code>a</code> and <code>b</code> from <code>5.5</code> and

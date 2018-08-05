@@ -8,7 +8,7 @@ default: clean generate
 
 .PHONY: clean
 clean:
-	rm -rf build
+	rm -rf build/site
 
 .PHONY: compile
 compile:

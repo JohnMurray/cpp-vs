@@ -1,0 +1,30 @@
+<h4>What This Code Does</h4>
+<p>
+    This code demonstrates concatenation (combining) of strings as well as taking
+    sub-sections of strings. Such code is commonly found across application domains.
+</p>
+
+<h4>What's the Same</h4>
+<p>
+    Both implementations take advantage of built-in string manipulation to concat
+    strings and look at string sub-sections.
+</p>
+
+<h4>What's Different</h4>
+<p>
+    C++ makes use something called <code>std::string_view</code> where as the JS examples
+    siply return new strings. A <code>std::string_view</code> behaves like a string, but
+    doesn't perform any copies when looking at sub-sectins of a string.
+</p>
+<p>
+    <code>std::string_view</code> is also useful when you want to manipulate the "view" of
+    a string without actually changing (mutating) the underlying data. This is particularly
+    useful when writing methods that accept data immutably, but can still "simulate" changes
+    locally without any unseen "effects" (if you come from a functional programming
+    background, the idea of avoiding effects should be very familiar).
+</p>
+<p>
+    It's worth noting that <code>string</code>s in JS are immutable. Thus, any methods
+    that return a portion of a string, such as <code>slice</code> could, under the covers,
+    return a view into the same data.
+</p>
