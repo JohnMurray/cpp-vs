@@ -50,9 +50,11 @@ int main() {
     std::string msg = " \t\n\t Hello, World! \t\n\t ";
 
     auto ltrim = [](std::string &in) {
-        in.erase(in.begin(), std::find_if(in.begin(), in.end(), [](int ch) {
-            return !std::isspace(ch);
-        }));
+        in.erase(in.begin(), std::find_if(in.begin(), in.end(),
+            [](int ch) {
+                return !std::isspace(ch);
+            }
+        ));
     };
 
     auto rtrim = [](std::string &in) {
@@ -161,7 +163,8 @@ int main() {
     // msg is now "Total Prices -&gt; (1.23)"
 
     msg = "Total Price -&gt; [1.23]";    
-    boost::replace_all_regex(msg, boost::regex("[\\[\\]\\-&gt;]"), std::string(""));
+    boost::replace_all_regex(msg, boost::regex("[\\[\\]\\-&gt;]"),
+        std::string(""));
     // msg is not "Total Prices  1.23"
 }
 </code></pre>
@@ -325,7 +328,8 @@ int main() {
 const max_gain = 0.15;
 const max_loss = 0.76;
 
-console.log(`Weekly Changes: ${name} +${max_gain * 100}% -${max_loss * 100}%`);
+console.log(`Weekly Changes: ${name} +${max_gain * 100}%` +
+    ` -${max_loss * 100}%`);
 // prints "Weekly Changes: FOOBAR +15% -76%"
 
 // Print list as a right-aligned list of hex values
