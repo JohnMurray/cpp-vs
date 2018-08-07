@@ -10,7 +10,7 @@ endeavour to learn C++, to compare similar examples to a language they may alrea
 know. This does mean that this site is targeted toward those that are _not_ learning
 C++ as their first language.
 
-This project generates the site/code for [cpp-vs](cpp-vs.com).All code samples is
+This project generates the site/code for [cpp-vs](cpp-vs.com).All code samples are
 licensed under the Apache V2 license, as is this site. If you whish to contribute
 additional examples, fixes, etc. then please read the __Goals__ section below to
 make sure we're all on the same page, then continue reading the __Contributing__
