@@ -10,8 +10,8 @@ versus_folder: 'versus'          # relative to root dir
 versus:                          # Folders relative to `versus_folder`
   - name:   'JavaScript'         # Names used in versus-list (main) page
     folder: 'js'
-#  - name:   'Go'
-#    folder: 'go'
+  - name:   'Go'
+    folder: 'go'
 #  - name:   'Ruby'
 #    folder: 'ruby'
 #  - name:   'Scala'
