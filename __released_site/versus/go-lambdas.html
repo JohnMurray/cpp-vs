@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
 <link rel="stylesheet" href="//www.cpp-vs.com/style/app.css">
 
-    <title>C++ vs JS - Lambdas</title>
+    <title>C++ vs Go - Lambdas</title>
   </head>
 
   <body>
@@ -56,25 +56,30 @@ int main() {
    addOne(5);
    // returns 6
 
-    // use lambda as value, do in-place modification
-    std::vector&lt;int&gt; v = {1, 2, 3, 4, 5};
-    std::transform(v.begin(), v.end(), v.begin(),
-        addOne);
-    // new value of 'v' is [2, 3, 4, 5, 6]
+   // use lambda as value, do in-place modification
+   std::vector&lt;int&gt; v = {1, 2, 3, 4, 5};
+   std::transform(v.begin(), v.end(), v.begin(),
+       addOne);
+   // new value of 'v' is [2, 3, 4, 5, 6]
 }</code></pre>
   </div>
   <div class='code-right'>
-    <div class="title"><h2>JavaScript</h2></div>
-    <pre><code class="language-javascript line-numbers">const addOne = (x) =&gt; {
-    return x + 1;
-}
+    <div class="title"><h2>Go</h2></div>
+    <pre><code class="language-go line-numbers">package main
 
-addOne(5);
-// returns 6
+func main() {
+    addOne := func(x int) int {
+        return x + 1
+    }
 
-// use lambda as a value
-[1, 2, 3, 4, 5].map(addOne)
-// returns [2, 3, 4, 5, 6]</code></pre>
+    addOne(5)
+    // returns 6
+
+    // use lambda as a value
+    v := []int{1, 2, 3, 4, 5}
+    apply([]int{1, 2, 3, 4, 5}, addOne)
+    // new value of 'v' is [2, 3, 4, 5, 6]
+}</code></pre>
   </div>
 </div>
 
@@ -88,24 +93,20 @@ addOne(5);
 
 <h4>What's the Same</h4>
 <p>
-    <strong>The JavaScript</strong> and <strong>the C++</strong> version define a lambda
+    <strong>The Go</strong> and <strong>the C++</strong> version define a lambda
     that is both callable directly and can be passed as a value without any special
     treatment. Both versions also define "pure" lambdas that do not capture any local
     state or perform any kind of mutating state-changes (i.e. calling the code, alone,
-    does not affect our program).
+    does not affect our program). Since both languages are statically typed, they also
+    both defined input and output types on the lambda.
 </p>
 
 <h4>What's Different</h4>
-    The differences mostly lie in type declarations and syntax. While the structure is
-    the same, C++ must define all of the parameter and return types. This is most visible
-    in how our lambda is structured.
-</p>
 <p>
-    <code>std::function</code> is used to represent the return and parameter types like so:
-</p>
-<pre class="language-cpp"><code>std::function&lt;ReturnType(Arg1Type, Arg2Type, Arg3Type)&gt;</code></pre>
-<p>
-    The lambda itself has 4 parts. The capture, the parameters, the return type, and the body.
+    The differences lie mainly in syntax. Whereas Go defines functions with the
+    <code>func</code> keyword, C++ uses some syntax that differs from a regular function.
+    The C++ lambda consists of 4 parts; the capture, the parameters, the return type, and the
+    body.
 </p>
 <pre class="language-cpp"><code>auto lambda = [](int param1, int param2) -> int {
     return param1 + param2;
@@ -115,11 +116,27 @@ addOne(5);
     The <code>[]</code> part is a list of variables we'd like to "capture" in our lambda (more on
     this in the next section). The parameters are everything between <code>(</code> and
     <code>)</code> and what comes after the <code>-&gt</code>, but before the <code>{</code>,
-    is the return type. And what's in the curly-braces is the function body. It's also worth pointing
-    out that we must always use <code>return</code> if we want to return a value from our lambda. There
-    is no short-hand equivalent of JavaScript's curly-brace-less lambda ():
-    <pre class="language-cpp"><code>const addOne = (x) => x + 1;</code></pre>
+    is the return type. Lastly, what's in the curly-braces is the function body.
 </p>
+<p>
+    Another difference is how we ascribe a type to the lambda. In Go, the type of the lambda looks
+    very much like the definition (sans the variable names and function body). In C++ we use the following
+    form.
+</p>
+<pre class="language-cpp"><code>std::function&lt;ReturnType(Arg1Type, Arg2Type, Arg3Type)&gt;</code></pre>
+
+<p>
+    It's worth noting that there is one small "cheat" on the Go side of things which is the use
+    of an <code>apply</code> function. Since Go doesn't have many facilities for transforming
+    arrays/slices, I've imagined a method that applies a lambda to an array in order to provide an
+    equivalent for the C++ code. To make this compile, you can use
+</p>
+<pre class="language-go"><code>func apply(arr []int, f func(int) int) {
+    for i, a := range arr {
+        arr[i] = f(a)
+    }
+}
+</code></pre>
 </div><div class="code-vs-title"><h3>Capturing Local State</h3></div>
 <div class='code-vs-container'>
   <div class='code-left'>
@@ -141,17 +158,21 @@ int main() {
 }</code></pre>
   </div>
   <div class='code-right'>
-    <div class="title"><h2>JavaScript</h2></div>
-    <pre><code class="language-javascript line-numbers">function addX(x) {
-    return (n) =&gt; {
-        return n + x;
+    <div class="title"><h2>Go</h2></div>
+    <pre><code class="language-go line-numbers">package main
+
+func addX(x int) func(int) int {
+    return func(n int) int {
+        return n + x
     }
 }
 
-const addFive = addX(5);
+func main() {
+    addFive := addX(5)
 
-addFive(10);
-// returns 15</code></pre>
+    addFive(10)
+    // returns 15
+}</code></pre>
   </div>
 </div>
 
@@ -171,7 +192,7 @@ addFive(10);
     expanded at compile-time into concrete implementations. So, to be fair, this is less generic
     programming and more akin to sophisticated macros.
 </p>
-<pre class="language-cpp line-numbers"><code>// When used in code, a version is compiled to match the usage.
+<pre class="language-cpp"><code>// When used in code, a version is compiled to match the usage.
 template&lt;typename T&gt;
 sum(T a, T b) {
     return a + b;
@@ -184,15 +205,17 @@ void main() {
 }
 </code></pre>
 <p>
-    In Javascript, all checking is done at runtime. That is to say, if we were to sum or multiply
-    two types that were not compatible (e.g <code>4 * {some: "object"}</code>)), we would not know
-    until the program ran. Many would point this out as a drawback to writing scalable, maintainable
-    code and is reflected with the popularity of such projects as
-    <a href="">TypeScript</a> which attempts to add types to JavaScript.
-    With C++, we will know at compile time when the templates are expanded
-    into concrete functions. At that point we will know if the types can be added, multiplied, etc.
-    Of course, most modern IDEs will give you some advanced notice as well. :-)
+    In Go, the types for numeric types must also be specified with options availabel such as <code>uint8</code>,
+    <code>int16</code>, <code>float64</code>, and <code>complex128</code> to name some of them. However, Go
+    lacks the ability to specify generic lambdas that work for all numeric types. As such, multiple versions
+    would have to be created if they were needed. And they would have to have different names in order to avoid
+    conflicting.
 </p>
+<pre class="language-go"><code>addXUInt8 := func(x uint8) func(uint8) uint8 { /* implementation */ }
+addXUint16 := func(x uint16) func(uint16) uint16 { /* implementation */ }
+addXUint32 := func(x uint32) func(uint32) uint32 { /* implementation */ }
+// ... repeat for other numeric types
+</code></pre>
 <p>
     The second notable difference is that the capture portion of our lambda (<code>[]</code>) contains
     the variable <code>x</code>. This value is <em>copied</em> into the lambda. Since C++ is not a
@@ -213,7 +236,6 @@ void main() {
     is that a reference is just a pointer to a location in memory. If the variable is cleaned up before
     the lambda is called, bad things could happen.
 </p>
-
 </div><div class="code-vs-title"><h3>Consuming</h3></div>
 <div class='code-vs-container'>
   <div class='code-left'>
@@ -250,27 +272,37 @@ int main() {
 </code></pre>
   </div>
   <div class='code-right'>
-    <div class="title"><h2>JavaScript</h2></div>
-    <pre><code class="language-javascript line-numbers">function sendEmail(to, from, subject, message,
-        success_cb, failure_cb) {
+    <div class="title"><h2>Go</h2></div>
+    <pre><code class="language-go line-numbers">package main
+
+import (
+    "fmt"
+    "math/rand"
+)
+
+func sendEmail(to string, from string, subject string, message string,
+               successCb func(string), failureCb func(string)) {
     // pretend we tried to send an email and call the
     // success or failure callback randomly.
-    if (Math.random() &gt; 0.5) {
-        success_cb(to);
+    if rand.Float32() &gt;= 0.5 {
+        successCb(to)
     } else {
-        failure_cb(to);
+        failureCb(to)
     }
 }
 
-sendEmail('you@your_domain.com', 'me@my_domain.com', 
-    'Very Important Email',
-    'TODO: remember to write email body. :-D ',
-    (to) =&gt; { 
-        console.log('successful email sent to: ' + to);
-    },
-    (to) =&gt; {
-        console.log('OH NO! Very important email not sent to ' + to);
-    });</code></pre>
+func main() {
+    sendEmail("you@your_domain.com", "me@my_domain.com",
+        "Very Important Email",
+        "TODO: remember to write email body. :-D",
+        func(to string) {
+            fmt.Printf("Successful email sent to: %s\n", to)
+        },
+        func(to string) {
+            fmt.Printf("OH NO! Very important email not sent to %s\n", to)
+        });
+
+}</code></pre>
   </div>
 </div>
 
@@ -284,10 +316,8 @@ sendEmail('you@your_domain.com', 'me@my_domain.com',
 
 <h4>What's Different</h4>
 <p>
-    Consuming lambdas in user-defined functions is very straight forward. The main
-    difference here, yet again, is that the C++ version has to do slightly more work
-    in order to define all of the types. Beyond the type declarations, the two versions
-    are very similar.
+    Aside from the syntactical differences in how we define and type lambdas, the two
+    examples are semantically equivalent.
 </p>
 </div>
 
