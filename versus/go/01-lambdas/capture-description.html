@@ -1,0 +1,59 @@
+<h4>What This Code Does</h4>
+<p>
+    <code>addX</code> is a function that returns another function. The function it returns adds
+    <code>x</code> to whatever value is provided. <code>x</code> is initially given to the
+    <code>addX</code> function but is <em>captured</em> by the lambda that is returned.
+</p>
+<h4>What's Different</h4>
+<p>
+    The first notable difference is the use of <code>template &lt;typename T&gt;</code> written
+    before the <code>addX</code> function. C++ must make use of "generics" in order to account
+    for different numeric types, such as <code>int</code>, <code>float</code>,
+    <code>double</code>, etc. This is done with what is called C++ templates. Templates are
+    expanded at compile-time into concrete implementations. So, to be fair, this is less generic
+    programming and more akin to sophisticated macros.
+</p>
+<pre class="language-cpp"><code>// When used in code, a version is compiled to match the usage.
+template&lt;typename T&gt;
+sum(T a, T b) {
+    return a + b;
+}
+
+void main() {
+    sum&lt;int&gt;(1, 2);
+    sum&lt;double&gt;(1.0, 2.0);
+    // this causes 2 specialized versions to be compiled
+}
+</code></pre>
+<p>
+    In Go, the types for numeric types must also be specified with options availabel such as <code>uint8</code>,
+    <code>int16</code>, <code>float64</code>, and <code>complex128</code> to name some of them. However, Go
+    lacks the ability to specify generic lambdas that work for all numeric types. As such, multiple versions
+    would have to be created if they were needed. And they would have to have different names in order to avoid
+    conflicting.
+</p>
+<pre class="language-go"><code>addXUInt8 := func(x uint8) func(uint8) uint8 { /* implementation */ }
+addXUint16 := func(x uint16) func(uint16) uint16 { /* implementation */ }
+addXUint32 := func(x uint32) func(uint32) uint32 { /* implementation */ }
+// ... repeat for other numeric types
+</code></pre>
+<p>
+    The second notable difference is that the capture portion of our lambda (<code>[]</code>) contains
+    the variable <code>x</code>. This value is <em>copied</em> into the lambda. Since C++ is not a
+    garbage-collected language, we have to be specific about which variables we want to capture and how
+    we'd like to capture them. For things we may not want to copy, we can pass by reference.
+</p>
+<pre class="language-cpp"><code>int main() {
+    auto bigString = "I'm a really long string, don't copy me ...";
+    auto printFn = [&bigString]() -> void {
+        std::cout << bigString;
+    };
+    printFn();
+}
+</code></pre>
+<p>
+    Note the <code>&amp;</code> before the variable name in <code>[&amp;bigString]</code>. This copies
+    the reference to the variable instead of copying the value into a new variable. The caveat with this
+    is that a reference is just a pointer to a location in memory. If the variable is cleaned up before
+    the lambda is called, bad things could happen.
+</p>
