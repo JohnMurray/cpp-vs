@@ -1,0 +1,53 @@
+<h4>What This Code Does</h4>
+<p>
+    The above code creates a simple lambda that adds <code>1</code> to the
+    value provided. It is called directly and also passed as a value into
+    functions that operate over lists of data.
+</p>
+
+<h4>What's the Same</h4>
+<p>
+    <strong>The Go</strong> and <strong>the C++</strong> version define a lambda
+    that is both callable directly and can be passed as a value without any special
+    treatment. Both versions also define "pure" lambdas that do not capture any local
+    state or perform any kind of mutating state-changes (i.e. calling the code, alone,
+    does not affect our program). Since both languages are statically typed, they also
+    both defined input and output types on the lambda.
+</p>
+
+<h4>What's Different</h4>
+<p>
+    The differences lie mainly in syntax. Whereas Go defines functions with the
+    <code>func</code> keyword, C++ uses some syntax that differs from a regular function.
+    The C++ lambda consists of 4 parts; the capture, the parameters, the return type, and the
+    body.
+</p>
+<pre class="language-cpp"><code>auto lambda = [](int param1, int param2) -> int {
+    return param1 + param2;
+}
+</code></pre>
+<p>
+    The <code>[]</code> part is a list of variables we'd like to "capture" in our lambda (more on
+    this in the next section). The parameters are everything between <code>(</code> and
+    <code>)</code> and what comes after the <code>-&gt</code>, but before the <code>{</code>,
+    is the return type. Lastly, what's in the curly-braces is the function body.
+</p>
+<p>
+    Another difference is how we ascribe a type to the lambda. In Go, the type of the lambda looks
+    very much like the definition (sans the variable names and function body). In C++ we use the following
+    form.
+</p>
+<pre class="language-cpp"><code>std::function&lt;ReturnType(Arg1Type, Arg2Type, Arg3Type)&gt;</code></pre>
+
+<p>
+    It's worth noting that there is one small "cheat" on the Go side of things which is the use
+    of an <code>apply</code> function. Since Go doesn't have many facilities for transforming
+    arrays/slices, I've imagined a method that applies a lambda to an array in order to provide an
+    equivalent for the C++ code. To make this compile, you can use
+</p>
+<pre class="language-go"><code>func apply(arr []int, f func(int) int) {
+    for i, a := range arr {
+        arr[i] = f(a)
+    }
+}
+</code></pre>
