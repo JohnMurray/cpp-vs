@@ -1,0 +1,10 @@
+name:        '02-Simple Web Server'
+filename:    'go-simple-web-server.html'
+versus_lang: 'Go'
+title:       'C++ vs Go - Simple Web Server'
+
+versuses:
+  - title: 'Simple Web Server'
+    other: 'server.go'
+    cpp:   'server.cc'
+    description: 'description.html'
