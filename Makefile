@@ -1,10 +1,47 @@
+default: docker-serve
+
+# Dev / Docker Comamnds
+#
+# If you are developing/hacking on this project, then this is likely the set of
+# commands that you are interested in. These commands will launch a docker container
+# with your changes compiled and running. Any time you want ot launch a server, just
+# run:
+#
+#   make docker-serve
+#
+# If you make changes and want to see those reflected, just re-run the same command.
+# If you are done working, you can run:
+#
+#   make docker-stop
+
+.PHONY: docker-dev-build
+docker-dev-build:
+	docker build --label cpp-vs-dev --tag cpp-vs:latest --file Dockerfile.dev .
+
+.PHONY: docker-serve
+docker-serve: docker-stop docker-dev-build
+	docker run -d=true -p 1234:1234 cpp-vs:latest
+	@echo "cpp-vs.com running at http://localhost:1234/"
+
+.PHONY: docker-stop
+docker-stop:
+	./scripts/stop-docker-dev.sh
+
+
+
+# Compile & Build/Generate Commands
+#
+# These commands are what take care of compiling the C++ code that does the site
+# templating as well as the code to generate the site. For these commands to work,
+# you'll need to setup an environment with all of the correct dependencies. If
+# you're just looking to do basic development or test some changes, take a look at
+# the docker commands above.
+
 CXX = clang++-6.0
 CXX_LINK_FLAGS = -l ctemplate_nothreads -l boost_system -l boost_filesystem -l yaml-cpp
 CXX_INCLUDE_FLAGS = -I . -I ./gen/
 
 export BUILD_ENV := development
-
-default: clean generate
 
 .PHONY: clean
 clean:

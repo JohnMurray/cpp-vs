@@ -61,7 +61,35 @@ If you see an issue you'd like implemented, please using the voting features
 
 ## Building the Site
 
-In order to build the site, you will need to have the following dependencies installed
+You can build changes and view them via a docker-based build. This does mean
+that you need docker installed. I've only tested this with the latest version
+of docker (version `18.0.6-ce` at time of writing), but I'm not doing much fancy,
+so older versions will likely work as well. To build and run locally, run:
+
+```bash
+make docker-serve
+
+# or just simply
+
+make
+```
+
+If you make changes and would like to see them reflected, simply re-run this command.
+After running, you should be able to navigate to `http://localhost:1234/` to see the
+site.
+
+To stop all running instances, you can run:
+
+```bash
+make docker-stop
+```
+
+
+## Building Without Docker
+
+In order to build the site without Docker, you will need to have the following
+dependencies installed and likely be running on a Linux environment (at least that
+is the only environment I've tested with).
 
 + [Less Compiler](http://lesscss.org/)
 + [CTemplate](https://github.com/rockdreamer/ctemplate)
@@ -72,9 +100,13 @@ In order to build the site, you will need to have the following dependencies ins
 You can generate the site by running `make compile && make generate`.
 
 
-## License
+## Copyright & Licensing
 
-Please see the __LICENSE__ file.
+All rights are reserved for the image/logo assets associated with cpp-vs (those files
+located within the `logo` folder).
+
+All other files in this repository are licensed under the Apache V2 license. Full license
+details located within the __LICENSE__ file.
 
 
   [b_fs]: https://www.boost.org/doc/libs/1_67_0/libs/filesystem/doc/index.htm
