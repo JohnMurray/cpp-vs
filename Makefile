@@ -28,6 +28,24 @@ docker-stop:
 	./scripts/stop-docker-dev.sh
 
 
+# Release Docker Commands
+#
+# Unless you are trusted and/or have access to publish the site, these commands
+# really not for you. Look away. :-)
+
+current_dir := $(shell pwd)
+
+.PHONY: docker-release
+docker-release: docker-dev-build
+	@bash -c "git diff-index --quiet HEAD --"
+	@rm -rf __released_site && git rm -rf __released_site && mkdir __released_site
+	docker build --label cpp-vs-release --tag cpp-vs-release:latest --file Dockerfile.release .
+	docker run -v "$(current_dir)/__released_site:/released_site:rw" cpp-vs-release:latest
+	@git add __released_site
+	@date=`date` git commit -m "Site release: $(shell date)"
+	@echo "Latest site added to source control"
+
+
 
 # Compile & Build/Generate Commands
 #
@@ -70,11 +88,3 @@ generate: generate-setup
 .PHONY: serve
 serve: generate-setup
 	@bundle exec puma -t 5:5 -p 1234
-
-.PHONY: release
-release: clean compile generate
-	@bash -c "git diff-index --quiet HEAD --"
-	@rm -rf __released_site && git rm -rf __released_site
-	@mv build/site __released_site && git add __released_site
-	@date=`date` git commit -m "Site release: $(shell date)"
-	@echo "Latest site added to source control"

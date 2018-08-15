@@ -1,0 +1,7 @@
+FROM cpp-vs:latest
+MAINTAINER John Murray <me@johnmurray.io>
+
+CMD make clean && \
+    make compile && \
+    make BUILD_ENV=production generate && \
+    cp -r build/site/* /released_site/
