@@ -20,6 +20,4 @@ RUN gem install bundler
 
 COPY . .
 RUN bundle install
-
-RUN make clean && make compile && make generate
-CMD make serve
+CMD make clean && make compile && make generate && make serve
