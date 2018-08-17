@@ -1,15 +1,27 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <!-- Required meta tags -->
-<meta charset="utf-8" >
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Google Analytics-->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-123758416-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-123758416-1');
+</script>
+
+<!-- Required meta tags -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+<meta name="description" content="Cpp-Vs is an educational site that teaches C++ through comparisons to other, popular programming languages." />
+<meta name="keywords" content="versus,c++ vs, c++ versus,vs,cpp,compare,compare c++" />
 
 <!-- Bootstrap CSS -->
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
-<link rel="stylesheet" href="//cpp-vs.herokuapp.com/style/app.css">
+<link rel="stylesheet" href="//www.cpp-vs.com/style/app.css">
 
-    <title>Cpp Vs - NodeJS & The Web Server</title>
+    <title>Cpp Vs - Learning C++ Through Comparative Programming</title>
   </head>
 
   <body>
@@ -18,16 +30,16 @@
       <!-- Title & Navigation -->
       <div class="title-nav">
     <div class="logo">
-        <img src="//cpp-vs.herokuapp.com/assets/logo.png" height="80" />
+        <img src="//www.cpp-vs.com/assets/logo.png" height="80" />
     </div>
     
     <div class="secondary-nav">
-        <a class="primary-nav-link" href="//cpp-vs.herokuapp.com/about">About</a>
+        <a class="primary-nav-link" href="//www.cpp-vs.com/about">About</a>
         <a class="primary-nav-link" href="https://www.twitter.com/johnmurray_io">Feedback</a>
     </div>
 
     <div class="navigation">
-        <a class="primary-nav-link" href="//cpp-vs.herokuapp.com/">Versus</a>
+        <a class="primary-nav-link" href="//www.cpp-vs.com/">Versus</a>
     </div>
 </div>
 
@@ -37,17 +49,30 @@
 
 <div class="versus-list">
   <div class="text-center lang-group">
+    <h2>Go</h2>
+    <div class="link">
+    <a href="/versus/go-lambdas">Lambdas</a>
+</div><div class="link">
+    <a href="/versus/go-simple-web-server">Simple Web Server</a>
+</div><div class="link">
+    <a href="/versus/go-process-coordination">Process Coordination</a>
+</div>
+</div><div class="text-center lang-group">
     <h2>JavaScript</h2>
     <div class="link">
-    <a href="/versus/js-higher-order-functions.html">Higher Order Functions</a>
+    <a href="/versus/js-lambdas">Lambdas</a>
 </div><div class="link">
-    <a href="/versus/nodejs-simple-web-server.html">Simple Web Server</a>
+    <a href="/versus/nodejs-simple-web-server">Simple Web Server</a>
+</div><div class="link">
+    <a href="/versus/js-string-processing">String Processing</a>
+</div><div class="link">
+    <a href="/versus/js-higher-order-functions">Higher Order Functions</a>
 </div>
 </div>
 
   <div class="text-center lang-group">
     <h2>I Need Moar!</h2>
-    <div class="link"><a href="//cpp-vs.herokuapp.com/moar">Ok, Here is Moar</a></div>
+    <div class="link"><a href="//www.cpp-vs.com/moar">Ok, Here is Moar</a></div>
   </div>
 </div>
 
@@ -56,7 +81,7 @@
 
     <!-- footer -->
 <div class="footer">
-    <i>by <a href="#">@johnmurray_io</a></i>
+    <i>by <a href="https://www.twitter.com/johnmurray_io">@johnmurray_io</a></i>
 </div>
     <!-- Fork Me! -->
 <a href="https://github.com/JohnMurray/cpp-vs">
@@ -68,7 +93,7 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
 
 <!-- Prism JS (code highlighting) -->
-<script src="//cpp-vs.herokuapp.com/js/prism.js"></script>
+<script src="//www.cpp-vs.com/js/prism.js"></script>
 
   </body>
 </html>

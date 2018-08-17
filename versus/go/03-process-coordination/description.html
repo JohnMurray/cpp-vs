@@ -1,0 +1,83 @@
+<h4>What This Code Does</h4>
+<p>
+    Given the string <code>"Hello, World!"</code> each program must create as many concurrent
+    units (threads for C++, goroutines for Go) as there are characters. Then the threads
+    must coordinate (without the help of the main thread) to print out the characters in
+    order. The concurrent units may receive, at a minimum, the character they are responsible
+    for as well as the index of the character to print.
+</p>
+
+<h4>What's the Same</h4>
+<p>
+    Both implementations use a similar approach (for the sake of comparison) to solve the problem.
+    Each individual concurrency unit waits for the index to be one-less than the index they hold.
+    That is to say, they are next in line to print out their character.
+</p>
+<p>
+    Also, both solutions wait, in the main function, for all concurrency units to finish their
+    processing. In the Go code, this is done with a <code>sync.WaitGroup</code> and in the C++
+    code the <code>join()</code> method is called on the threads.
+</p>
+
+<h4>What's Different</h4>
+<p>
+    A LOT. Let's break it down.
+</p>
+<p>
+    The first thing to understand, before discussing code, is that the philosophies differ in the
+    C++ and the Go community around concurrency. One of the creators of Go has been attributed with
+    the following quote:
+</p>
+<blockquote>
+    Don't communicate by sharing memory; share memory by communicating. <strong>&mdash; Rob Pike</strong>
+</blockquote>
+<p>
+    To expand on this quote, in Go, it is more idiomatic to share state through the use of c)hannels.
+    What is sent over the channels should <i>not</i> be shared between goroutines, that is to say data
+    sent over channels is copied such that two goroutines do not point to the same location in memory.
+    This share-nothing approach is a common way to avoid data-races when dealing with concurrent
+    programming.
+</p>
+<p>
+    While these ideas are sound, they are not always typical in C++. Often, an application is written in C++
+    because performance is very important. When this is the case, and concurrent computation is involved,
+    it is often the case that C++ code will share memory across threads to avoid the price in copying
+    data. 
+</p>
+
+<p><strong>Breaking Down Go</strong></p>
+<p>
+    Because the go example aims to coordinate through message-passing, we make use of channels. Channels
+    can be thought of as synchronized queues. However channels do not, by default, support advanced queueing
+    patterns such as fan-out. Since every goroutine that is printing needs to communicate with all other
+    goroutines, we have to implement a simple broadcaster which will fan-out our messages for us
+    (<code>channelBroadcaster</code>). 
+</p>
+<p>
+    The use of a <code>WaitGroup</code> is used to allow the main goroutine to wait for all the other
+    goroutines to exit. In this case, we are sharing memory by passing a pointer to the <code>WaitGroup</code>
+    to the goroutine. However, even though Go strives to avoid sharing memory, <code>WaitGroup</code>
+    comes from the Go stdlib's <code>sync</code> package and is considered safe (as well as idiomatic).
+</p>
+
+<p><strong>Breaking Down C++</strong></p>
+<p>
+    The C++ solution shares memory of the current print index by using a <code>std::atomic_int</code>. Each
+    thread is launched via a lambda that captures the index, the current character, and a reference to the
+    index (references are similar to pointers in that they allow sharing of memory). Each thread performs a
+    busy-wait as long as the current value of the atomic integer is not what they are looking for
+    (<code>index.fetch()</code> retrieves the current value of the int).
+</p>
+<p>
+    Once the main thread as launched all of the threads, it simply waits for all of the threads to exit by
+    calling <code>join()</code> on the thread handles.
+</p>
+
+<p><strong>Some Conclusions</strong></p>
+<p>
+    While sharing memory, for this particular (and contrived) example, does result in less code; the Go solution is
+    arguably more efficient in that at no point are the goroutines spinning waiting for a message. The underlying
+    Go scheduler is able to sleep the goroutine and wake it up when there is a message available on the channel.
+    How does that work? Well, reading from the channel is a blocking operation, one which the Go scheduler is able
+    to efficiently handle and not waist CPU resources waiting.
+</p>

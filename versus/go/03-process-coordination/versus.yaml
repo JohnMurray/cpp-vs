@@ -1,6 +1,7 @@
-name:        'Process Coordination'
+name:        '03-Process Coordination'
 filename:    'go-process-coordination.html'
 versus_lang: 'Go'
+title:       'C++ vs Go - Process Coordination'
 
 versuses:
   - title: 'Process Coordination'

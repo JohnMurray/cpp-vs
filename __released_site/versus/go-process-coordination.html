@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Google Analytics-->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-123758416-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-123758416-1');
+</script>
+
+<!-- Required meta tags -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+<meta name="description" content="Cpp-Vs is an educational site that teaches C++ through comparisons to other, popular programming languages." />
+<meta name="keywords" content="versus,c++ vs, c++ versus,vs,cpp,compare,compare c++" />
+
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+<link rel="stylesheet" href="//www.cpp-vs.com/style/app.css">
+
+    <title>C++ vs Go - Process Coordination</title>
+  </head>
+
+  <body>
+    <div class="page">
+
+      <!-- Title & Navigation -->
+      <div class="title-nav">
+    <div class="logo">
+        <img src="//www.cpp-vs.com/assets/logo.png" height="80" />
+    </div>
+    
+    <div class="secondary-nav">
+        <a class="primary-nav-link" href="//www.cpp-vs.com/about">About</a>
+        <a class="primary-nav-link" href="https://www.twitter.com/johnmurray_io">Feedback</a>
+    </div>
+
+    <div class="navigation">
+        <a class="primary-nav-link" href="//www.cpp-vs.com/">Versus</a>
+    </div>
+</div>
+
+      <!--Content -->
+      <div class="content">
+        
+<!-- 
+    Just a placeholder, if you want to see more about how the versus
+    code is templated, go look at the versus* files in the includes
+    directory.
+-->
+<div class="code-vs-title"><h3>Process Coordination</h3></div>
+<div class='code-vs-container'>
+  <div class='code-left'>
+    <div class="title"><h2>Cpp</h2></div>
+    <pre><code class="language-cpp line-numbers">#include &lt;atomic&gt;
+#include &lt;iostream&gt;
+#include &lt;thread&gt;
+#include &lt;string&gt;
+#include &lt;vector&gt;
+
+int main() {
+    std::string msg = "Hello, World!";
+    std::atomic_int index = -1;
+
+    std::vector&lt;std::thread&gt; threads;
+    for (auto i = 0; i &lt; msg.length(); i++) {
+        threads.push_back(std::thread([ii = i, c = msg[i], &index]() {
+            while ((ii - 1) != index.load()) {
+                // busy wait
+            }
+            std::cout &lt;&lt; c;
+            index.fetch_add(1);
+        }));
+    }
+
+    for (auto &t: threads) {
+        t.join();
+    }
+}</code></pre>
+  </div>
+  <div class='code-right'>
+    <div class="title"><h2>Go</h2></div>
+    <pre><code class="language-go line-numbers">package main
+
+import (
+	"fmt"
+	"sync"
+)
+
+func main() {
+	broadcastRegister := make(chan chan int, 1)
+	broadcastIn := make(chan int, 5)
+	go channelBroadcaster(broadcastRegister, broadcastIn)
+
+	var wg sync.WaitGroup
+
+	for i, c := range "Hello, World!" {
+		workerIn := make(chan int, 20)
+		broadcastRegister &lt;- workerIn
+		wg.Add(1)
+		go coordinatedPrint(i, string(c), workerIn, broadcastIn, &wg)
+	}
+
+	broadcastIn &lt;- -1
+	wg.Wait()
+}
+
+func channelBroadcaster(register chan chan int, in chan int) {
+	outs := make([]chan int, 0, 10)
+	for {
+		select {
+		case out := &lt;- register:
+			outs = append(outs, out)
+		case index := &lt;- in:
+			for _, out := range outs {
+				out &lt;- index
+			}
+		}
+	}
+}
+
+func coordinatedPrint(index int, char string, in chan int,
+					  out chan int, wg *sync.WaitGroup) {
+	defer wg.Done()
+	for {
+		prev_i := &lt;- in
+		if (index - 1) == prev_i {
+			fmt.Print(char)
+			out &lt;- index
+			break
+		}
+	}
+}</code></pre>
+  </div>
+</div>
+
+<div class="code-description blurb">
+  <h4>What This Code Does</h4>
+<p>
+    Given the string <code>"Hello, World!"</code> each program must create as many concurrent
+    units (threads for C++, goroutines for Go) as there are characters. Then the threads
+    must coordinate (without the help of the main thread) to print out the characters in
+    order. The concurrent units may receive, at a minimum, the character they are responsible
+    for as well as the index of the character to print.
+</p>
+
+<h4>What's the Same</h4>
+<p>
+    Both implementations use a similar approach (for the sake of comparison) to solve the problem.
+    Each individual concurrency unit waits for the index to be one-less than the index they hold.
+    That is to say, they are next in line to print out their character.
+</p>
+<p>
+    Also, both solutions wait, in the main function, for all concurrency units to finish their
+    processing. In the Go code, this is done with a <code>sync.WaitGroup</code> and in the C++
+    code the <code>join()</code> method is called on the threads.
+</p>
+
+<h4>What's Different</h4>
+<p>
+    A LOT. Let's break it down.
+</p>
+<p>
+    The first thing to understand, before discussing code, is that the philosophies differ in the
+    C++ and the Go community around concurrency. One of the creators of Go has been attributed with
+    the following quote:
+</p>
+<blockquote>
+    Don't communicate by sharing memory; share memory by communicating. <strong>&mdash; Rob Pike</strong>
+</blockquote>
+<p>
+    To expand on this quote, in Go, it is more idiomatic to share state through the use of c)hannels.
+    What is sent over the channels should <i>not</i> be shared between goroutines, that is to say data
+    sent over channels is copied such that two goroutines do not point to the same location in memory.
+    This share-nothing approach is a common way to avoid data-races when dealing with concurrent
+    programming.
+</p>
+<p>
+    While these ideas are sound, they are not always typical in C++. Often, an application is written in C++
+    because performance is very important. When this is the case, and concurrent computation is involved,
+    it is often the case that C++ code will share memory across threads to avoid the price in copying
+    data. 
+</p>
+
+<p><strong>Breaking Down Go</strong></p>
+<p>
+    Because the go example aims to coordinate through message-passing, we make use of channels. Channels
+    can be thought of as synchronized queues. However channels do not, by default, support advanced queueing
+    patterns such as fan-out. Since every goroutine that is printing needs to communicate with all other
+    goroutines, we have to implement a simple broadcaster which will fan-out our messages for us
+    (<code>channelBroadcaster</code>). 
+</p>
+<p>
+    The use of a <code>WaitGroup</code> is used to allow the main goroutine to wait for all the other
+    goroutines to exit. In this case, we are sharing memory by passing a pointer to the <code>WaitGroup</code>
+    to the goroutine. However, even though Go strives to avoid sharing memory, <code>WaitGroup</code>
+    comes from the Go stdlib's <code>sync</code> package and is considered safe (as well as idiomatic).
+</p>
+
+<p><strong>Breaking Down C++</strong></p>
+<p>
+    The C++ solution shares memory of the current print index by using a <code>std::atomic_int</code>. Each
+    thread is launched via a lambda that captures the index, the current character, and a reference to the
+    index (references are similar to pointers in that they allow sharing of memory). Each thread performs a
+    busy-wait as long as the current value of the atomic integer is not what they are looking for
+    (<code>index.fetch()</code> retrieves the current value of the int).
+</p>
+<p>
+    Once the main thread as launched all of the threads, it simply waits for all of the threads to exit by
+    calling <code>join()</code> on the thread handles.
+</p>
+
+<p><strong>Some Conclusions</strong></p>
+<p>
+    While sharing memory, for this particular (and contrived) example, does result in less code; the Go solution is
+    arguably more efficient in that at no point are the goroutines spinning waiting for a message. The underlying
+    Go scheduler is able to sleep the goroutine and wake it up when there is a message available on the channel.
+    How does that work? Well, reading from the channel is a blocking operation, one which the Go scheduler is able
+    to efficiently handle and not waist CPU resources waiting.
+</p>
+</div>
+
+      </div>
+    </div>
+
+    <!-- footer -->
+<div class="footer">
+    <i>by <a href="https://www.twitter.com/johnmurray_io">@johnmurray_io</a></i>
+</div>
+    <!-- Fork Me! -->
+<a href="https://github.com/JohnMurray/cpp-vs">
+    <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub">
+</a>
+    <!-- Boostrap JS -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+
+<!-- Prism JS (code highlighting) -->
+<script src="//www.cpp-vs.com/js/prism.js"></script>
+
+  </body>
+</html>

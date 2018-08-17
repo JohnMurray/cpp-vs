@@ -21,7 +21,7 @@
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
 <link rel="stylesheet" href="//www.cpp-vs.com/style/app.css">
 
-    <title>C++ vs JS - Simple Web Server</title>
+    <title>C++ vs Go - Simple Web Server</title>
   </head>
 
   <body>
@@ -69,21 +69,22 @@ int main()
 }</code></pre>
   </div>
   <div class='code-right'>
-    <div class="title"><h2>JavaScript (NodeJS)</h2></div>
-    <pre><code class="language-javascript line-numbers">const http = require('http');
+    <div class="title"><h2>Go</h2></div>
+    <pre><code class="language-go line-numbers">package main
 
-const hostname = '127.0.0.1';
-const port = 3000;
+import (
+	"fmt"
+	"net/http"
+)
 
-const server = http.createServer((req, res) =&gt; {
-  res.statusCode = 200;
-  res.setHeader('Content-Type', 'text/plain');
-  res.end('Hello World\n');
-});
+func main() {
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprint(w, "Hello world")
+	})
 
-server.listen(port, hostname, () =&gt; {
-  console.log(`Server running at http://${hostname}:${port}/`);
-});</code></pre>
+	http.ListenAndServe(":8000", nil)
+}
+</code></pre>
   </div>
 </div>
 
@@ -96,12 +97,10 @@ server.listen(port, hostname, () =&gt; {
 
 <h4>What's the Same</h4>
 <p>
-    <strong class="font-bold">The JavaScript</strong> solution uses <a href="https://nodejs.org">NodeJS</a>
-    (a server-side JavaScript platform) to implement a simple server with a single-route (example is taken
-    directly from the <a href="https://nodejs.org">nodejs.org</a> website.
-    <strong class="font-bold">The C++</strong> solution, in similar fashion, uses <a href="https://github.com/ipkn/crow">Crow</a>
-    to define a simple route using very similar mechanisms (example taken from the <a href="https://github.com/ipkn/crow">Crow
-    GitHub README</a>).
+    Both solutions define a
+    <a href="http://sinatrarb.com/">Sinatra</a>/<a href="http://flask.pocoo.org/">Flask</a>
+    style web-server where a path is matched to a simple lambda to handle the request. Both examples
+    also "block" when spawning the web-service.
 </p>
 
 <h4>What's Different</h4>
@@ -121,6 +120,8 @@ server.listen(port, hostname, () =&gt; {
     minor adjustments before being "written in stone." You can find the status for all specifications on the
     <a href="https://isocpp.org/std/status">ISO CPP</a> website.
     <br />
+</p>
+<p>
     Asynchronous networking I/O can also be achieved today with
     <a href="https://www.boost.org/doc/libs/master/doc/html/boost_asio.html">Boost.Asio</a>,
     which currently follows the Networking TS in it's implementation.

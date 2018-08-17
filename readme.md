@@ -6,10 +6,11 @@
 </p>
 
 This is an experiment/idea I had to see if people would find it useful, in their
-endeavour to learn C++, to compare similar examples to a language they may know
-better.
+endeavour to learn C++, to compare similar examples to a language they may already
+know. This does mean that this site is targeted toward those that are _not_ learning
+C++ as their first language.
 
-This project generates the site/code for [cpp-vs](cpp-vs.com).All code samples is
+This project generates the site/code for [cpp-vs](http://www.cpp-vs.com).All code samples are
 licensed under the Apache V2 license, as is this site. If you whish to contribute
 additional examples, fixes, etc. then please read the __Goals__ section below to
 make sure we're all on the same page, then continue reading the __Contributing__
@@ -48,7 +49,7 @@ issue so we can discuss. Please use the following template for your issues
 ```
 TITLE: C++ VS LANGUAGE - PROBLEM or CODE-EXAMPLE
 
-Please write a few sentances describing what you'd like added.
+Please write a few sentences describing what you'd like added.
 
 Why is this a good problem/example for the site? How does it meet the goals?
 
@@ -60,7 +61,35 @@ If you see an issue you'd like implemented, please using the voting features
 
 ## Building the Site
 
-In order to build the site, you will need to have the following dependencies installed
+You can build changes and view them via a docker-based build. This does mean
+that you need docker installed. I've only tested this with the latest version
+of docker (version `18.0.6-ce` at time of writing), but I'm not doing much fancy,
+so older versions will likely work as well. To build and run locally, run:
+
+```bash
+make docker-serve
+
+# or just simply
+
+make
+```
+
+If you make changes and would like to see them reflected, simply re-run this command.
+After running, you should be able to navigate to `http://localhost:1234/` to see the
+site.
+
+To stop all running instances, you can run:
+
+```bash
+make docker-stop
+```
+
+
+## Building Without Docker
+
+In order to build the site without Docker, you will need to have the following
+dependencies installed and likely be running on a Linux environment (at least that
+is the only environment I've tested with).
 
 + [Less Compiler](http://lesscss.org/)
 + [CTemplate](https://github.com/rockdreamer/ctemplate)
@@ -68,12 +97,16 @@ In order to build the site, you will need to have the following dependencies ins
 + [yaml-cpp](https://github.com/jbeder/yaml-cpp) (tested with v0.5)
 + Compiler with C++ 17 support (mostly cause I haven't tested with anything else)
 
-You can generate the site by running `make`.
+You can generate the site by running `make compile && make generate`.
 
 
-## License
+## Copyright & Licensing
 
-Please see the __LICENSE__ file.
+All rights are reserved for the image/logo assets associated with cpp-vs (those files
+located within the `logo` folder).
+
+All other files in this repository are licensed under the Apache V2 license. Full license
+details located within the __LICENSE__ file.
 
 
   [b_fs]: https://www.boost.org/doc/libs/1_67_0/libs/filesystem/doc/index.htm

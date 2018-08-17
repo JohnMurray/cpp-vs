@@ -1,6 +1,7 @@
 # Editor Files
 *.swp
 .vscode/
+tags
 
 # Build Artifacts
 build/

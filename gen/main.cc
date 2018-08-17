@@ -171,7 +171,7 @@ int main(int argc, char** argv) {
     }
 
     // lambda for rendering files (used for simple files and versus files)
-    auto render_file_with_layout = [&](std::string const &f) -> std::string {
+    auto render_file_with_layout = [&](std::string const &f, std::string const &title_override) -> std::string {
         auto file = site_dir / f;
         auto header = PageFile::parse(file);
 
@@ -181,7 +181,11 @@ int main(int argc, char** argv) {
         }
         // render the page
         template_dict.SetValue("content", header.body);
-        template_dict.SetValue("title", header.title);
+        if (title_override.empty()) {
+            template_dict.SetValue("title", header.title);
+        } else {
+            template_dict.SetValue("title", title_override);
+        }
         std::string rendered_template = expand_string(layouts[header.layout], template_dict);
 
         // second pass to set dynamic data within includes
@@ -228,10 +232,14 @@ int main(int argc, char** argv) {
 
                 std::ofstream versus_file;
                 versus_file.open((build_dir / "versus" / vs_conf["filename"].as<std::string>()).string());
-                versus_file << render_file_with_layout(config.versus_file);
+                versus_file << render_file_with_layout(config.versus_file, vs_conf["title"].as<std::string>());
                 versus_file.close();
 
-                versus_links[pair.first][vs_conf["name"].as<std::string>()] = "versus/" + vs_conf["filename"].as<std::string>();
+                auto filename = vs_conf["filename"].as<std::string>();
+                if (filename.substr(filename.length() - 5) == ".html") {
+                    filename = filename.substr(0, filename.length() - 5);
+                }
+                versus_links[pair.first][vs_conf["name"].as<std::string>()] = "versus/" + filename;
             }
         }
     }
@@ -258,7 +266,7 @@ int main(int argc, char** argv) {
         // write out rendered page to disk
         std::ofstream rendered_file;
         rendered_file.open((build_dir / str_replace(f, ".tpl.html", ".html")).string());
-        rendered_file << render_file_with_layout(f);
+        rendered_file << render_file_with_layout(f, "");
         rendered_file.close();
     }
     return 0;

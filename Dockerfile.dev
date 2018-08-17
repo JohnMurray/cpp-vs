@@ -1,0 +1,23 @@
+FROM ubuntu:18.04
+MAINTAINER John Murray <me@johnmurray.io>
+
+EXPOSE 1234
+
+RUN apt-get update
+RUN apt-get install -y \
+      clang-6.0 \
+      build-essential \
+      libboost-all-dev \
+      libyaml-cpp-dev \
+      libctemplate-dev \
+      nodejs \
+      npm \
+      ruby \
+      ruby-dev
+
+RUN npm install -g less
+RUN gem install bundler
+
+COPY . .
+RUN bundle install
+CMD make clean && make compile && make generate && make serve

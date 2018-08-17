@@ -1,0 +1,432 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Google Analytics-->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-123758416-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-123758416-1');
+</script>
+
+<!-- Required meta tags -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+<meta name="description" content="Cpp-Vs is an educational site that teaches C++ through comparisons to other, popular programming languages." />
+<meta name="keywords" content="versus,c++ vs, c++ versus,vs,cpp,compare,compare c++" />
+
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+<link rel="stylesheet" href="//www.cpp-vs.com/style/app.css">
+
+    <title>C++ vs JS - String Processing</title>
+  </head>
+
+  <body>
+    <div class="page">
+
+      <!-- Title & Navigation -->
+      <div class="title-nav">
+    <div class="logo">
+        <img src="//www.cpp-vs.com/assets/logo.png" height="80" />
+    </div>
+    
+    <div class="secondary-nav">
+        <a class="primary-nav-link" href="//www.cpp-vs.com/about">About</a>
+        <a class="primary-nav-link" href="https://www.twitter.com/johnmurray_io">Feedback</a>
+    </div>
+
+    <div class="navigation">
+        <a class="primary-nav-link" href="//www.cpp-vs.com/">Versus</a>
+    </div>
+</div>
+
+      <!--Content -->
+      <div class="content">
+        
+<!-- 
+    Just a placeholder, if you want to see more about how the versus
+    code is templated, go look at the versus* files in the includes
+    directory.
+-->
+<div class="code-vs-title"><h3>String Processing</h3></div>
+<div class='code-vs-container'>
+  <div class='code-left'>
+    <div class="title"><h2>Cpp</h2></div>
+    <pre><code class="language-cpp line-numbers">#include &lt;algorithm&gt;
+#include &lt;string&gt;
+
+int main() {
+    std::string msg = " \t\n\t Hello, World! \t\n\t ";
+
+    auto ltrim = [](std::string &in) {
+        in.erase(in.begin(), std::find_if(in.begin(), in.end(),
+            [](int ch) {
+                return !std::isspace(ch);
+            }
+        ));
+    };
+
+    auto rtrim = [](std::string &in) {
+        in.erase(std::find_if(in.rbegin(), in.rend(), [](int ch) {
+            return !std::isspace(ch);
+        }).base(), in.end());
+    };
+
+    auto trim = [&](std::string &in) {
+        ltrim(in);
+        rtrim(in);
+    };
+
+    trim(msg);
+    // msg is not "Hello, World!"
+}
+</code></pre>
+  </div>
+  <div class='code-right'>
+    <div class="title"><h2>JavaScript</h2></div>
+    <pre><code class="language-javascript line-numbers">// String with mixed-character whitespace at beginning and end
+const msg = " \t\n\t Hello, World! \t\n\t  ";
+
+msg.trim();
+// returns "Hello, World!"
+</code></pre>
+  </div>
+</div>
+
+<div class="code-description blurb">
+  <h4>What This Code Does</h4>
+<p>
+    This code simply trims leading and trailing whitespace from a string.
+</p>
+
+<h4>What's the Same</h4>
+<p>
+    Almost nothing.
+</p>
+
+<h4>What's Different</h4>
+<p>
+    Almost everything.
+</p>
+
+<p>
+    The most obvious difference is that the C++ version goes about writing the
+    <i>implementation</i> for <code>trim</code> rather than using something from
+    the standard library. Why is that?
+</p>
+<p>
+    Well... C++ can, at times, be very minimal in its stdlib. That is to say that no
+    <code>trim</code> function exists directly. However, using the ability to remove
+    sub-sections of the <code>std::string</code> along with some utilities from the
+    <code>&lt;algorithm&gt;</code> header (<code>std::find_if</code>), a simple and
+    efficient version can be created.
+</p>
+<p>
+    In practice, most organizations will either develop their own internal utility
+    libraries that would likely include these functions or adopt an open-source
+    implementation such as <a href="https://www.bost.org">Boost</a>. As an example,
+    if we were using Boost, we would simply write:
+<pre class="language-cpp"><code>#include &lt;boost/algorithm/string.hpp&gt;
+
+boost::trim(msg);
+</code></pre>
+</p>
+<p>
+    Obviously there is a bit of code missing (the <code>main</code> function and
+    declaration of <code>msg</code>, but you can see that the important code is
+    now equivalent to the JS version.
+</p>
+<p>
+    The other difference worth pointing out is that the C++ does the modification to
+    the string in-place. If we were to examine the <code>msg</code> in the JavaScript
+    version after running trim, you'll notice nothing was changed.
+</p>
+<p>
+<pre class="language-js"><code>var msg = " \t\n\t Hello, World! \t\n\t ";
+msg.trim();       // value returned is "Hello, World!"
+console.log(msg); // prints " \t\n\t Hello, World! \t\n\t "
+</code></pre>
+</p>
+
+</div><div class="code-vs-title"><h3>More Processing</h3></div>
+<div class='code-vs-container'>
+  <div class='code-left'>
+    <div class="title"><h2>Cpp</h2></div>
+    <pre><code class="language-cpp line-numbers">#include &lt;string&gt;
+#include &lt;boost/algorithm/string_regex.hpp&gt;
+#include &lt;boost/regex.hpp&gt;
+
+int main() {
+    std::string msg = "Total Price -&gt; [1.23]";
+
+    boost::to_lower(msg);
+    // msg is now "total price -&gt; [1.23]"
+
+    msg = "Total Price -&gt; [1.23]";
+    boost::to_upper(msg);
+    // msg is now "TOTAL PRICE -&gt; [1.23]"
+
+    msg = "Total Price -&gt; [1.23]";
+    boost::replace_all(msg, "[", "(");
+    boost::replace_all(msg, "]", ")");
+    // msg is now "Total Prices -&gt; (1.23)"
+
+    msg = "Total Price -&gt; [1.23]";    
+    boost::replace_all_regex(msg, boost::regex("[\\[\\]\\-&gt;]"),
+        std::string(""));
+    // msg is not "Total Prices  1.23"
+}
+</code></pre>
+  </div>
+  <div class='code-right'>
+    <div class="title"><h2>JavaScript</h2></div>
+    <pre><code class="language-javascript line-numbers">// String with mixed-character whitespace at beginning and end
+const msg = "Total Price -&gt; [1.23]";
+
+msg.toLowerCase();
+// returns "total price -&gt; [1.23]"
+
+msg.toUpperCase();
+// returns "TOTAL PRICE -&gt; [1.23]"
+
+msg.replace('[', '(').replace(']', ')');
+// returns "Total Price -&gt; (1.23)"
+
+msg.replace(/[\[\]\-&gt;]/, '');
+// returns "Total Price  1.23"
+</code></pre>
+  </div>
+</div>
+
+<div class="code-description blurb">
+  <h4>What This Code Does</h4>
+<p>
+    This code modifies the string cases (to upper and lower case) and modifies string contents
+    using both string-literals and regular expressions as lookup values. 
+</p>
+<h4>What's the Same</h4>
+<p>
+    Almost everything.
+</p>
+<h4>What's Different</h4>
+<p>
+    Almost nothing. Well, we did cheat this time around and use the Boost library. Using a freely
+    available utility library is common in many C++ projects and allows us to fill the gaps that
+    exist in the standard library. With this library added, our code is now very comparable,
+    aside from syntactic differences, to the JS version.
+</p>
+
+</div><div class="code-vs-title"><h3>Sub-Strings & Concatenation</h3></div>
+<div class='code-vs-container'>
+  <div class='code-left'>
+    <div class="title"><h2>Cpp</h2></div>
+    <pre><code class="language-cpp line-numbers">#include &lt;string&gt;
+#include &lt;string_view&gt;
+
+int main() {
+    std::string greeting = "Hello";
+    std::string to       = "World";
+
+    std::string msg = greeting + ", " + to;
+    // msg is a new string of "Hello, World"
+    
+    std::string_view view(msg);
+    // create a "view" into the string
+
+    view.substr(0, 5);
+    // returns new string_view of "Hello"
+
+    view.substr(7);
+    // returns new string_view of "World!"
+}
+</code></pre>
+  </div>
+  <div class='code-right'>
+    <div class="title"><h2>JavaScript</h2></div>
+    <pre><code class="language-javascript line-numbers">const greeting = "Hello";
+const to       = "World!";
+
+const msg = greeting + ", " + to;
+// msg is a new string of "Hello, World!"
+
+
+msg.slice(0, 5);
+// returns new string "Hello"
+
+msg.slice(7);
+// returns new string "World!"
+</code></pre>
+  </div>
+</div>
+
+<div class="code-description blurb">
+  <h4>What This Code Does</h4>
+<p>
+    This code demonstrates concatenation (combining) of strings as well as taking
+    sub-sections of strings. Such code is commonly found across application domains.
+</p>
+
+<h4>What's the Same</h4>
+<p>
+    Both implementations take advantage of built-in string manipulation to concat
+    strings and look at string sub-sections.
+</p>
+
+<h4>What's Different</h4>
+<p>
+    C++ makes use something called <code>std::string_view</code> where as the JS examples
+    siply return new strings. A <code>std::string_view</code> behaves like a string, but
+    doesn't perform any copies when looking at sub-sectins of a string.
+</p>
+<p>
+    <code>std::string_view</code> is also useful when you want to manipulate the "view" of
+    a string without actually changing (mutating) the underlying data. This is particularly
+    useful when writing methods that accept data immutably, but can still "simulate" changes
+    locally without any unseen "effects" (if you come from a functional programming
+    background, the idea of avoiding effects should be very familiar).
+</p>
+<p>
+    It's worth noting that <code>string</code>s in JS are immutable. Thus, any methods
+    that return a portion of a string, such as <code>slice</code> could, under the covers,
+    return a view into the same data.
+</p>
+
+</div><div class="code-vs-title"><h3>String Formatting</h3></div>
+<div class='code-vs-container'>
+  <div class='code-left'>
+    <div class="title"><h2>Cpp</h2></div>
+    <pre><code class="language-cpp line-numbers">#include &lt;array&gt;
+#include &lt;iostream&gt;
+#include &lt;iomanip&gt;
+#include &lt;string&gt;
+
+int main() {
+    std::string name = "FOOBAR";
+    auto max_gain = 0.15f;
+    auto max_loss = 0.76f;
+
+    std::cout &lt;&lt; "Weekly Changes: " &lt;&lt; name
+        &lt;&lt; " +" &lt;&lt; (max_gain * 100) &lt;&lt; "%"
+        &lt;&lt; " -" &lt;&lt; (max_loss * 100) &lt;&lt; "%"
+        &lt;&lt; "\n";
+    // prints "Weekly Changes: FOOBAR +15% -76%"
+
+    // Print list as a right-aligned list of hex values
+    std::array some_numbers { 123456, 90346873, 28 };
+
+    std::ios state(nullptr);
+    state.copyfmt(std::cout);
+
+    for (auto num: some_numbers) {
+        std::cout &lt;&lt; "\t0x";
+        std::cout &lt;&lt; std::hex &lt;&lt; std::uppercase &lt;&lt; std::setw(8)
+            &lt;&lt; std::setfill('0') &lt;&lt; num;
+        std::cout.copyfmt(state);
+        std::cout &lt;&lt; "\n";
+    }
+    /* Prints:
+        0x0001E240
+        0x05629579
+        0x0000001C
+    */
+}</code></pre>
+  </div>
+  <div class='code-right'>
+    <div class="title"><h2>JavaScript</h2></div>
+    <pre><code class="language-javascript line-numbers">const name = "FOOBAR";
+const max_gain = 0.15;
+const max_loss = 0.76;
+
+console.log(`Weekly Changes: ${name} +${max_gain * 100}%` +
+    ` -${max_loss * 100}%`);
+// prints "Weekly Changes: FOOBAR +15% -76%"
+
+// Print list as a right-aligned list of hex values
+const someNumbers = [123456, 90346873, 28];
+for (i in someNumbers) {
+    const hex = someNumbers[i].toString(16);
+    let padding = "";
+    if (hex.length &lt; 8) {
+        padding = "0".repeat(8 - hex.length);
+    }
+    console.log(`\t0x${padding}${hex}`);
+}
+/* Prints:
+    0x0001e240
+    0x05629579
+    0x0000001c
+*/
+</code></pre>
+  </div>
+</div>
+
+<div class="code-description blurb">
+  <h4>What This Code Does</h4>
+<p>
+    This code demonstrates how string formatting is done with two very simple examples.
+    The first simply prints out a stock-symbol and it's maximum change (positive and
+    negative), representing a floating-point number as a percentage. The second example
+    prints a list of base-10 integers as their hex value. All hex values have a prefix
+    of <code>0x</code> and are eight characters wide (left-padded with zeros).
+</p>
+
+<h4>What's the Same</h4>
+<p>
+    Both examples shown have to manually format the percentage values in the first example.
+</p>
+
+<h4>What's Different</h4>
+<p>
+    While the JS version relies on string interpolation to provide formatting, C++ relies on
+    an <code>iostream</code> (Input/Output Stream). An <code>iostream</code> is more than just
+    a simple mechanism for printing as it allows us to specify transformers that apply to all
+    values sent through the stream. Not in particular this bit of code:
+</p>
+<pre class="language-cpp"><code> std::cout << std::hex << std::uppercase << std::setw(8)
+    << std::setfill('0') << num;
+</code></pre>
+<p>
+    These modifiers inform the stream that we want to print hex values, in uppercase, with a
+    width of 8 characters, and a "fill" of <code>0</code> (our left-padding). Then we print
+    the value <code>num</code>, which passes through all of these filters we've set on our
+    stream. While this can be an extremely powerful abstraction, we can see that it is also
+    a little cumbersome when data is interleaved with other output in which we don't want to
+    apply the same formatting rules. We use the <code>state</code> object to constantly reset
+    our stream state before printing other values.
+</p>
+<p>
+    Because of C++'s close relationship with C, we can also use the
+    <code>printf</code>/<code>sprintf</code> family of functions for formatting, in which our
+    hex-formatting code would look like:
+</p>
+<pre class="language-cpp"><code>printf("\t0x%08X\n", num);</code></pre>
+<p>
+    This approach is also often the recommended approach when performing formatting in a
+    performance-critical/sensitive portion of code.
+</p>
+</div>
+
+      </div>
+    </div>
+
+    <!-- footer -->
+<div class="footer">
+    <i>by <a href="https://www.twitter.com/johnmurray_io">@johnmurray_io</a></i>
+</div>
+    <!-- Fork Me! -->
+<a href="https://github.com/JohnMurray/cpp-vs">
+    <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub">
+</a>
+    <!-- Boostrap JS -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+
+<!-- Prism JS (code highlighting) -->
+<script src="//www.cpp-vs.com/js/prism.js"></script>
+
+  </body>
+</html>

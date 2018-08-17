@@ -1,9 +1,0 @@
-name:        '03-String Processing'
-filename:    'js-string-processing.html'
-versus_lang: 'JavaScript'
-
-versuses:
-  - title: 'String Processing'
-    other: 'strings.js'
-    cpp:   'strings.cc'
-    description: 'description.html'
