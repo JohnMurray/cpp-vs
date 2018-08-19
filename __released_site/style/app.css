@@ -173,7 +173,8 @@ strong,
   * Footer Styles
   */
 .footer {
-  margin-top: 25px;
+  margin-top: 30px;
+  margin-bottom: 20px;
 }
 .footer a {
   color: #888;
