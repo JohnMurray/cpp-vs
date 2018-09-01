@@ -1,0 +1,151 @@
+<h4>What This Code Does</h4>
+<p>
+    This code splits a task (summing numbers in a sequence) amongst multiple
+    units of concurrency (threads/goroutines) and then collects the results
+    using idiomatic approaches.
+</p>
+
+
+<h4>What's the Same</h4>
+<p>
+    Both approaches use a random number generator to populate the initial input-data.
+    Both approaches also use a slice or view when handing bits of the input data
+    to the concurrent sub-routine. That is, both implementations avoid explicit copies
+    when passing data.
+</p>
+<p>
+    Lastly, both implementations wait for the concurrent sub-routines to finish before
+    displaying the final result. This is done in Go by reading from a channel <code>N</code>
+    times, where <code>N</code> represents the number of goroutines created. C++ does this
+    by calling <code>join()</code> on the thread object, which waits for the thread to exit
+    before continuing.
+</p>
+
+<h4>What's Different</h4>
+<p>
+    The first noticeable difference, although not the main point of this versus, is the random
+    number generation. See the later section <strong>Digging Deeper: Random Number Generation</strong>
+    if this most interests you. The main semantic differences lie in how we collect and combine
+    (reduce) the results from the concurrent operations.
+</p>
+<p>
+    Again, it is idiomatic in Go to pass results via channels. As such our "reduction" of results
+    happens within the main goroutine (summing all individual results). C++, on the other hand, uses
+    an <code>atomic&lt;int&gt;</code>, which allows each thread to participate in the "reduction"
+    by atomically adding their results to the <code>totalSum</code> object. Atomics in C++ rely on
+    the compiler to efficiently implement for the target platform you're compiling too. That is,
+    some CPUs have the ability to support atomic operations at the instruction level. For CPUs that
+    do not the compiler may result to other methods, such as locks, to implement atomic operations.
+</p>
+<p>
+    The second difference is how we represent "slices" of arrays; that is a view of an array that
+    doesn't involve performing copies. Go uses the type <code>[]T</code> to represent slices and
+    slices can also be "sliced" using the <code>[M:N]</code> notation. I would consider this "first
+    class" support for the concept of slices. C++ on the other hand achieves this through the use of
+    iterators.
+</p>
+
+
+<h5>Digging Deeper: C++ Slices (AKA Iterators)</h5>
+<p>
+    An iterator in C++ is a cursor object that points to a particular position in a data-structure.
+    In our case, it is pointing to a position in a <code>std::vector</code>. In many respects the cursor
+    acts like a pointer. We can advance the position by incrementing, such as <code>cur++</code>. We
+    get the value by dereferencing <code>*cur</code>. We ensure that we do not advance the iterator
+    beyond the end of the data-structure by comparing it to a stop position, <code>end</code>. However,
+    since we are working with a fixed-size vector, this is easy for us to ensure. If we were iterating
+    over a dynamically sized vector, our code would look like:
+</p>
+<pre class="language-cpp"><code>for (auto curr = my_vec.begin(); curr++; curr != my_vec.end()) {
+  // process items
+}
+</code></pre>
+<p>
+    However, if we were going to iterate the entire array and perform the same operation for each
+    loop, we could also write this code as:
+</p>
+<pre class="language-cpp"><code>for (auto &amp;val: my_vec) {
+  // process items
+}
+</code></pre>
+<p>
+    While the two abstractions look similar, the second method is called a "ranged for loop" and
+    was introduced in C++ 11. This form is the most convenient, the most limiting, and most often
+    seen when operating over all elements within a loop. The first approach, using iterators, is
+    the most flexible option for when a simple for loop is not all that you need. With the iterator
+    you could:
+</p>
+<ul>
+  <li>Pass the iterator to a function as a slice (like our example above)</li>
+  <li>Increment the iterator only under certain conditions and possibly re-processing an item multiple times within a loop</li>
+  <li>Process every <i>other</i> element within a loop (by incrementing the cursor by 2: <code>cur += 2</code>)</li>
+  <li>Process a collection backwards using the reverse iterators (<code>rbegin()</code> and <code>rend()</code>)</li>
+</ul>
+
+    
+<h5>Digging Deeper: Random Number Generation</h5>
+<p>
+    The Go implementation offers a random-number generator similar
+    to many high-level languages. However C++, in true C++ fashion, provides some lower level
+    abstractions and gives you more control over <i>how</i> your random numbers are generated.
+</p>
+<p>
+    <dl>
+        <dt><strong><code>random_device</code></strong></dt>
+        <dd>
+            Generates a random numeric value from hardware entropy.
+            The exact method of how this is generated is compiler dependent (e.g. Clang uses
+            <code>/dev/urandom</code> on Linux, while GCC uses Intel's <code>rdrand</code> instruction). It
+            is also possible that your platform doesn't support a way to generate random numbers from hardware
+            entropy, in which case this type would not be constructable. A value from a
+            <code>random_device</code> is often used as a seed value to any of the stdlib random number
+            generators.
+        </dd>
+        <dt><strong><code>mt19937</code></strong></dt>
+        <dd>
+            <p>
+                A random number generator based on the
+                <a href="https://en.wikipedia.org/wiki/Mersenne_Twister" target="_blank">Mersenne Twister</a>
+                algorithm.  The C++ standard library provides a decently large selection of random number
+                generators to use, and depending on your application you might care deeply about which one
+                is used.  The list of random-number algorithms is:
+            </p>
+            <ul>
+                <li><code>minstd_rand0</code></li>
+                <li><code>minstd_rand</code></li>
+                <li><code>mt19937</code></li>
+                <li><code>mt19937_64</code></li>
+                <li><code>ranlux24_base</code></li>
+                <li><code>ranlux48_base</code></li>
+                <li><code>ranlux24</code></li>
+                <li><code>ranlux48</code></li>
+                <li><code>knuth_b</code></li>
+                <li><code>default_random_engine</code></li>
+            </ul>
+            <p>
+                For more information on what the differences are, you can view the reference page
+                for the <code>&lt;random&gt;</code> header
+                <a href="https://en.cppreference.com/w/cpp/header/random" target="_blank">here</a>.
+            </p>
+        </dd>
+        <dt><strong><code>uniform_int_distribution</code></strong></dt>
+        <dd>
+            <p>
+                Allows us to specify a range in which all numbers in that range are equally likely to be returned
+                as a random number. While not responsible for generating random numbers, this allows us to specify
+                ranges of random numbers we'd like to receive which is different from the range of random numbers
+                being generated, while not losing "randomness" of values.
+            </p>
+            <p>
+                Alternatively, other distributions allow us to shift the probabilities of getting certain numbers,
+                such as an
+                <a href="https://en.wikipedia.org/wiki/Exponential_distribution" target="_blank">Exponential Distribution</a>,
+                which may bias number generation to one side of the range over time.
+            </p>
+            <p>
+                At the time of writing, there are 20 distributions defined in the <code>&lt;random&gt;</code>
+                header. You can see the full list of standard-library distributions
+                <a href="https://en.cppreference.com/w/cpp/header/random" target="_blank">here</a>.
+        </dd>
+    </dl>
+<p>
