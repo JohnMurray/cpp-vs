@@ -1,0 +1,10 @@
+name:        '05-Resource Management'
+filename:    'go-resource-management.html'
+versus_lang: 'Go'
+title:       'C++ vs Go - Resource Management'
+
+versuses:
+  - title: 'Resource Management'
+    other: 'resource.go'
+    cpp:   'resource.cc'
+    description: 'description.html'
