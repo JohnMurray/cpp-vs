@@ -11,7 +11,8 @@ know. This does mean that this site is targeted toward those that are _not_ lear
 C++ as their first language.
 
 This project generates the site/code for [cpp-vs](http://www.cpp-vs.com).All code samples are
-licensed under the Apache V2 license, as is this site. If you whish to contribute
+licensed under the Apache V2 license, as is this site (see __Copyright & Licensing__ section
+below for full/exact details). If you whish to contribute
 additional examples, fixes, etc. then please read the __Goals__ section below to
 make sure we're all on the same page, then continue reading the __Contributing__
 section for the juicy details.
@@ -102,8 +103,8 @@ You can generate the site by running `make compile && make generate`.
 
 ## Copyright & Licensing
 
-All rights are reserved for the image/logo assets associated with cpp-vs (those files
-located within the `logo` folder).
+All rights are reserved for the image/logo assets associated with cpp-vs, including all files
+located within the `logos` and `__released_site/assets` folders (relative to project root).
 
 All other files in this repository are licensed under the Apache V2 license. Full license
 details located within the __LICENSE__ file.
