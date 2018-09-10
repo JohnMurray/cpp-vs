@@ -9,25 +9,28 @@ using namespace std;
 namespace asio = ::boost::asio;
 
 int main() {
-	asio::io_context ioContext;
+	asio::io_context ioc;
 
-	auto shutdown = [&](const boost::system::error_code& ec, int signal_number) {
+	asio::signal_set terminationSignals(ioc, SIGINT, SIGTERM);
+
+	auto shutdown = [&](const boost::system::error_code& ec, int ) {
 		if (!ec) {
 			terminationSignals.cancel();
 		}
-	});
-
-	asio::signal_set terminationSignals(ioContext, SIGINT, SIGTERM);
+	};
 
 	terminationSignals.async_wait(shutdown);
 
-	asio::post(io, [&](){
+	asio::post(ioc, [](){
 		cout << "Hello World!" << endl;
 	});
 
-	// Since this method blocks it should
-	// be the last line in the main thread.
-	ioContext.run();
+	cout << "setup done." << endl;
+
+	// This method blocks the main thread.
+	ioc.run();
+
+	cout << "exiting..." << endl;
 
 	return 0;
 }
