@@ -1,0 +1,79 @@
+<h4>What This Code Does</h4>
+<p>
+	Demonstrate the use of lambda functions as callbacks for basic asynchronous tasks.
+	<ul>
+		<li>Scheduling a Hello-World-lambda for immediate deferred execution</li>
+		<li>Quitting the program on an external <code>KILL</code> signal</li>
+	</ul>
+</p>
+<p>
+	It is common for a program to instruct the operating system to perform <em>long-running computations</em> or
+	to respond to <em>events from external sources</em>. A long running computation could be copying a large file or
+	scheduling a timer. External events can be user inputs in a GUI program, or for a server program the activity in the network for example.
+	To avoid getting unresponsive an application typically delegates large work loads into parallel running threads or
+	the operating system. To consume the outcome of such an operation the program must run a loop which listens to
+	events coming from the operating system or own threads.
+</p>
+<p>
+	To reduce the complexity of a program and to make it less error-prone, it is advisable to leave the management of threads
+	and event loops to well established third-party libraries.
+</p>
+<h4>What's the Same</h4>
+<p>
+	Both examples set up an environment to support asynchronous execution. Both programs run non-blocking down to
+	the bottom of the program without any output.
+	We keep the program running unless the program is sent a termination signal.
+
+	<table>
+	<thead>
+	<tr>
+		<td>JS output</td><td>C++ output</td>
+	</tr>
+	</thead>
+	<tbody>
+	<tr>
+	<td><pre>
+$ node os-events.js
+setup done.
+Hello Node.js-World!
+^Cexiting...</pre>
+	</td>
+		<td><pre>
+$ ./os-events
+setup done.
+Hello World!
+^Cexiting...</pre>
+</td>
+	</tr>
+	</tbody>
+	</table>
+</p>
+<h4>What's Different</h4>
+<p>
+	<h5>Node.js</h5>
+		Being essentially single-threaded JavaScript can rely on it's engine for all parallel executing multi-threading stuff.
+		Today lambda callbacks, promises, async/await etc. are baked into the language to help with asynchronous operations.
+		The <a href="https://nodejs.org/en/docs/guides/event-loop-timers-and-nexttick/">Node.js event loop</a> starts as soon as the
+		process starts, and ends when no further callbacks remain to be performed.
+	<p>
+		The program is kept running using a practically never-ending timer. This extra step is needed in this example because
+		when <code>process.on</code> adds it's callback to the JS event-loop the program has already exited.
+	</p>
+
+	<h5>C++ with Boost.Asio</h5>
+	<p>
+		<a href="https://www.boost.org/doc/libs/1_68_0/doc/html/boost_asio.html">Boost.Asio</a>
+		provides a platform-independent asynchronous api for common long-running tasks in networking, timers, serial ports and signals.
+		The outcome events are typically processed by continuations (callback functions) or can be forwarded to <code>std::future</code>.
+	</p>
+	<p>
+		<a href="https://www.boost.org/doc/libs/1_68_0/doc/html/thread.html">Boost.Thread</a> v.4 provides a implementation for
+		future continuations as proposed in <a href="http://www.modernescpp.com/index.php/component/content/article/44-blog/multithreading/multithreading-c-17-and-c-20/279-std-future-extensions?Itemid=239">C++14 TS Extensions for Concurrency V1</a>. C++ Futures are a general high-level abstraction for background threads.
+		With the <code>.then</code> continuations they have much in common with the promises of JS.
+	</p>
+	<p>
+		The program is kept running as long as there are pending operations (i.e.)<code>terminationSignals</code> scheduled to <code>asio::io_context</code>.
+	</p>
+
+
+</p>

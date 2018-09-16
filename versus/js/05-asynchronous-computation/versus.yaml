@@ -1,0 +1,10 @@
+name:        '05-Asynchronous Computation'
+filename:    'js-asynchronous-computation.html'
+versus_lang: 'JavaScript'
+title:       'C++ vs JS - Asynchronous Computation'
+
+versuses:
+  - title: 'Operating System Event Loop'
+    other: 'os-events.js'
+    cpp:   'os-events.cc'
+    description: 'os-events-description.html'
