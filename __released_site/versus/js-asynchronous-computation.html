@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Google Analytics-->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-123758416-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-123758416-1');
+</script>
+
+<!-- Required meta tags -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+<meta name="description" content="Cpp-Vs is an educational site that teaches C++ through comparisons to other, popular programming languages." />
+<meta name="keywords" content="versus,c++ vs, c++ versus,vs,cpp,compare,compare c++" />
+
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+<link rel="stylesheet" href="//www.cpp-vs.com/style/app.css">
+
+    <title>C++ vs JS - Asynchronous Computation</title>
+  </head>
+
+  <body>
+    <div class="page">
+
+      <!-- Title & Navigation -->
+      <div class="title-nav">
+    <div class="logo">
+        <img src="//www.cpp-vs.com/assets/logo.png" height="80" />
+    </div>
+    
+    <div class="secondary-nav">
+        <a class="primary-nav-link" href="//www.cpp-vs.com/about">About</a>
+        <a class="primary-nav-link" href="https://www.twitter.com/johnmurray_io">Feedback</a>
+    </div>
+
+    <div class="navigation">
+        <a class="primary-nav-link" href="//www.cpp-vs.com/">Versus</a>
+    </div>
+</div>
+
+      <!--Content -->
+      <div class="content">
+        
+<!-- 
+    Just a placeholder, if you want to see more about how the versus
+    code is templated, go look at the versus* files in the includes
+    directory.
+-->
+<div class="code-vs-title"><h3>Operating System Event Loop</h3></div>
+<div class='code-vs-container'>
+  <div class='code-left'>
+    <div class="title"><h2>Cpp</h2></div>
+    <pre><code class="language-cpp line-numbers">#include &lt;boost/asio.hpp&gt;
+#include &lt;csignal&gt;
+#include &lt;iostream&gt;
+
+#define BOOST_THREAD_VERSION 4
+#include &lt;boost/thread/future.hpp&gt;
+
+using namespace std;
+namespace asio = ::boost::asio;
+
+int main() {
+	asio::io_context ioc;
+
+	asio::signal_set terminationSignals(ioc, SIGINT, SIGTERM);
+
+	auto shutdown = [&](const boost::system::error_code& ec, int ) {
+		if (!ec) {
+			terminationSignals.cancel();
+		}
+	};
+
+	terminationSignals.async_wait(shutdown);
+
+	asio::post(ioc, [](){
+		cout &lt;&lt; "Hello World!" &lt;&lt; endl;
+	});
+
+	cout &lt;&lt; "setup done." &lt;&lt; endl;
+
+	// This method blocks the main thread.
+	ioc.run();
+
+	cout &lt;&lt; "exiting..." &lt;&lt; endl;
+
+	return 0;
+}
+
+</code></pre>
+  </div>
+  <div class='code-right'>
+    <div class="title"><h2>JavaScript</h2></div>
+    <pre><code class="language-javascript line-numbers">/****** Browser ******/
+
+// Nothing to do here: The process runs as long as the browser tab is not closed.
+
+setTimeout(function(){ console.log("Hello Browser-World!"); }, 0);
+
+/******Node.js *******/
+
+// run for 11 days
+const runTimer = setTimeout(function keepAlive(){}, 1.0e+9);
+
+function shutdown() {
+	console.log("exiting...");
+	clearTimeout(runTimer);
+}
+
+process.on('SIGINT', shutdown);
+process.on('SIGTERM', shutdown);
+
+process.nextTick(function(){ console.log("Hello Node.js-World!"); });
+
+console.log("setup done.");</code></pre>
+  </div>
+</div>
+
+<div class="code-description blurb">
+  <h4>What This Code Does</h4>
+<p>
+	Demonstrate the use of lambda functions as callbacks for basic asynchronous tasks.
+	<ul>
+		<li>Scheduling a Hello-World-lambda for immediate deferred execution</li>
+		<li>Quitting the program on an external <code>KILL</code> signal</li>
+	</ul>
+</p>
+<p>
+	It is common for a program to instruct the operating system to perform <em>long-running computations</em> or
+	to respond to <em>events from external sources</em>. A long running computation could be copying a large file or
+	scheduling a timer. External events can be user inputs in a GUI program, or for a server program the activity in the network for example.
+	To avoid getting unresponsive an application typically delegates large work loads into parallel running threads or
+	the operating system. To consume the outcome of such an operation the program must run a loop which listens to
+	events coming from the operating system or own threads.
+</p>
+<p>
+	To reduce the complexity of a program and to make it less error-prone, it is advisable to leave the management of threads
+	and event loops to well established third-party libraries.
+</p>
+<h4>What's the Same</h4>
+<p>
+	Both examples set up an environment to support asynchronous execution. Both programs run non-blocking down to
+	the bottom of the program without any output.
+	We keep the program running unless the program is sent a termination signal.
+
+	<table>
+	<thead>
+	<tr>
+		<td>JS output</td><td>C++ output</td>
+	</tr>
+	</thead>
+	<tbody>
+	<tr>
+	<td><pre>
+$ node os-events.js
+setup done.
+Hello Node.js-World!
+^Cexiting...</pre>
+	</td>
+		<td><pre>
+$ ./os-events
+setup done.
+Hello World!
+^Cexiting...</pre>
+</td>
+	</tr>
+	</tbody>
+	</table>
+</p>
+<h4>What's Different</h4>
+<p>
+	<h5>Node.js</h5>
+		Being essentially single-threaded JavaScript can rely on it's engine for all parallel executing multi-threading stuff.
+		Today lambda callbacks, promises, async/await etc. are baked into the language to help with asynchronous operations.
+		The <a href="https://nodejs.org/en/docs/guides/event-loop-timers-and-nexttick/">Node.js event loop</a> starts as soon as the
+		process starts, and ends when no further callbacks remain to be performed.
+	<p>
+		The program is kept running using a practically never-ending timer. This extra step is needed in this example because
+		when <code>process.on</code> adds it's callback to the JS event-loop the program has already exited.
+	</p>
+
+	<h5>C++ with Boost.Asio</h5>
+	<p>
+		<a href="https://www.boost.org/doc/libs/1_68_0/doc/html/boost_asio.html">Boost.Asio</a>
+		provides a platform-independent asynchronous api for common long-running tasks in networking, timers, serial ports and signals.
+		The outcome events are typically processed by continuations (callback functions) or can be forwarded to <code>std::future</code>.
+	</p>
+	<p>
+		<a href="https://www.boost.org/doc/libs/1_68_0/doc/html/thread.html">Boost.Thread</a> v.4 provides a implementation for
+		future continuations as proposed in <a href="http://www.modernescpp.com/index.php/component/content/article/44-blog/multithreading/multithreading-c-17-and-c-20/279-std-future-extensions?Itemid=239">C++14 TS Extensions for Concurrency V1</a>. C++ Futures are a general high-level abstraction for background threads.
+		With the <code>.then</code> continuations they have much in common with the promises of JS.
+	</p>
+	<p>
+		The program is kept running as long as there are pending operations (i.e.)<code>terminationSignals</code> scheduled to <code>asio::io_context</code>.
+	</p>
+
+
+</p>
+
+</div>
+
+      </div>
+    </div>
+
+    <!-- footer -->
+<div class="footer">
+    by <a href="https://www.twitter.com/johnmurray_io" target="_blank">@johnmurray_io</a> |
+    <a href="https://github.com/Johnmurray/cpp-vs/graphs/contributors" target="_blank">contributors</a>
+</div>
+
+    <!-- Fork Me! -->
+<a href="https://github.com/JohnMurray/cpp-vs">
+    <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub">
+</a>
+    <!-- Boostrap JS -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+
+<!-- Prism JS (code highlighting) -->
+<script src="//www.cpp-vs.com/js/prism.js"></script>
+
+  </body>
+</html>

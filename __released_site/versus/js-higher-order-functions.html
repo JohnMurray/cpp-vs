@@ -320,13 +320,13 @@ addFivePFive(4.5);
 	original function.
 </p>
 <p>
-	In the example of vanilla currying, the curry HOF implementation is given for binary functions.
+	In the example of vanilla currying, <code>curry</code> is given for binary functions.
 	It is used to curry a binary concat function for arrays.
 	By calling the curried function with an array of integers from 0 to 2 we arrive at a new function which prepends
 	these values to it's argument (i.e. the second parameter of the concat function).
 </p>
 <p>
-	In the second exmaple with auto-currying we take a binary function invoker <code>biOp</code> with three arguments and create a new curried
+	In the second example with auto-currying we take a binary function invoker <code>biOp</code> with three arguments and create a new curried
 	function by using a utility function. By calling the curried function in turn with the separate arguments
 	of the original function we receive more and more specialised (and still curried) functions:
 	First a binary sum function <code>plus</code> and last a function which just adds <code>5.5</code>.
