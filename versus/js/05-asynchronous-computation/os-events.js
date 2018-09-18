@@ -1,8 +1,11 @@
 /****** Browser ******/
 
-// Nothing to do here: The process runs as long as the browser tab is not closed.
+// Nothing to do here: The process runs as long as the
+// browser tab is not closed.
 
-setTimeout(function(){ console.log("Hello Browser-World!"); }, 0);
+setTimeout(function(){
+    console.log("Hello Browser-World!");
+}, 0);
 
 /******Node.js *******/
 
@@ -17,6 +20,8 @@ function shutdown() {
 process.on('SIGINT', shutdown);
 process.on('SIGTERM', shutdown);
 
-process.nextTick(function(){ console.log("Hello Node.js-World!"); });
+process.nextTick(function(){
+    console.log("Hello Node.js-World!");
+});
 
 console.log("setup done.");
