@@ -115,11 +115,13 @@ strong,
   text-align: left;
   width: 60%;
 }
-.moar-page {
-  text-align: center;
+.moar-page .resource-group dt {
+  font-weight: 400;
+  font-size: 24px;
+  margin-bottom: 10px;
 }
-.moar-page .resource-group {
-  margin-bottom: 20px;
+.moar-page .resource-group dd {
+  margin-left: 30px;
 }
 .moar-page .resource-group .link {
   display: block;
