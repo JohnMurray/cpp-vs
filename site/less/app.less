@@ -42,6 +42,10 @@ blockquote {
   padding-left: 10px;
 }
 
+dl {
+  margin-left: 20px;
+}
+
 /**
  * Global page styles
  */
@@ -138,10 +142,17 @@ strong, .font-bold, .text-bold {
   width: 60%;
 }
 .moar-page {
-  text-align: center;
-
   .resource-group {
-    margin-bottom: 20px;
+    // margin-bottom: 20px;
+
+    dt {
+      font-weight: 400;
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+    dd {
+      margin-left: 30px;
+    }
 
     .link {
       display: block;
@@ -213,7 +224,8 @@ strong, .font-bold, .text-bold {
   * Footer Styles
   */
 .footer {
-  margin-top: 25px;
+  margin-top: 30px;
+  margin-bottom: 20px;
   
   a {
     color: #888;

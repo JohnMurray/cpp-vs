@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Google Analytics-->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-123758416-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-123758416-1');
+</script>
+
+<!-- Required meta tags -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+<meta name="description" content="Cpp-Vs is an educational site that teaches C++ through comparisons to other, popular programming languages." />
+<meta name="keywords" content="versus,c++ vs, c++ versus,vs,cpp,compare,compare c++" />
+
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+<link rel="stylesheet" href="//www.cpp-vs.com/style/app.css">
+
+    <title>C++ vs Go - Resource Management</title>
+  </head>
+
+  <body>
+    <div class="page">
+
+      <!-- Title & Navigation -->
+      <div class="title-nav">
+    <div class="logo">
+        <img src="//www.cpp-vs.com/assets/logo.png" height="80" />
+    </div>
+    
+    <div class="secondary-nav">
+        <a class="primary-nav-link" href="//www.cpp-vs.com/about">About</a>
+        <a class="primary-nav-link" href="https://www.twitter.com/johnmurray_io">Feedback</a>
+    </div>
+
+    <div class="navigation">
+        <a class="primary-nav-link" href="//www.cpp-vs.com/">Versus</a>
+    </div>
+</div>
+
+      <!--Content -->
+      <div class="content">
+        
+<!-- 
+    Just a placeholder, if you want to see more about how the versus
+    code is templated, go look at the versus* files in the includes
+    directory.
+-->
+<div class="code-vs-title"><h3>Resource Management</h3></div>
+<div class='code-vs-container'>
+  <div class='code-left'>
+    <div class="title"><h2>Cpp</h2></div>
+    <pre><code class="language-cpp line-numbers">#include &lt;mutex&gt;
+
+struct Stats {
+    uint64_t someStat;
+    uint64_t otherStat;
+
+    std::mutex lock;
+};
+
+void updateSharedObject(Stats *obj) {
+    std::lock_guard m(obj-&gt;lock);
+
+    obj-&gt;someStat++;
+    obj-&gt;otherStat = obj-&gt;someStat / 2;
+}
+</code></pre>
+  </div>
+  <div class='code-right'>
+    <div class="title"><h2>Go</h2></div>
+    <pre><code class="language-go line-numbers">package main
+
+import (
+	"sync"
+)
+
+type Stats struct {
+	someStat  uint64
+	otherStat uint64
+
+	sync.Mutex
+}
+
+func updateSharedObject(obj *Stats) {
+	obj.Lock()
+	defer obj.Unlock()
+
+	obj.someStat++
+	obj.otherStat = obj.someStat / 2
+}
+</code></pre>
+  </div>
+</div>
+
+<div class="code-description blurb">
+  <h4>What This Code Does</h4>
+<p>
+    Updates properties of a shared object using a lock, specifically a mutex, to ensure
+    that updates are not applied concurrently.
+</p>
+
+
+<h4>What's the Same</h4>
+<p>
+    Both solutions define a <code>Stats</code> struct that contains two integer fields
+    and a mutex lock. Both solutions also contain an <code>updateSharedObject</code> function
+    which obtains an exclusive lock via the mutex and update the structs integer fields.
+</p>
+
+
+<h4>What's Different</h4>
+<p>
+    While the code is fundamentally the same, the main difference is how resources
+    are managed. The Go version acquires the lock and then uses <code>defer obj.Unlock()</code>
+    to clean up, in this case release the lock. However, the C++ solution only seems to acquire
+    the lock but never releases it:
+</p>
+<pre class="language-cpp"><code> std::lock_guard m(obj->lock);</code></pre>
+<p>
+    However, this lock <i>is</i> released at the end of the function. This is done via RAII,
+    which stands for "Resource Acquisition Is Initialization." These terms can be a bit confusing
+    to understand, but let's first take a detour to explain constructors and destructors and then
+    we can better define RAII.
+</p>
+
+
+<h5>Constructors & Destructors</h5>
+<p>
+    Most OOP languages have the concept of a constructor. It is essentially a creation function
+    that sets up the internal state of a new instance of a class. This also exists in C++.
+    However, a separate concept called a destructor also exists. The purpose of the destructor
+    is mirror to the constructor in that it tears down the object before the memory is reclaimed.
+    Take the following class for example:
+</p>
+<pre class="language-cpp"><code>class int_array {
+private:
+    int *arr;
+
+public:
+    int_array(size_t size) {
+        this.arr = new int[size];
+    }
+    ~int_array() {
+        delete [] this.arr;
+    }
+}
+</code></pre>
+<p>
+    <code>int_array</code> is a class that wraps a C-style array. Upon construction, an arary of
+    dynamic size is allocated on the heap. If we were to simply free instances of the
+    <code>int_array</code> without freeing the memory allocated on construction, we would have a
+    memory leak. Instead we define a destructor, <code>~int_array</code>, which frees this memory.
+    We can construct and delete an instance of <code>int_arary</code> like so:
+</p>
+<pre class="language-cpp"><code>auto arr = new int_array(16);
+// use array ...
+
+delete arr;
+</code></pre>
+<p>
+    <code>new</code> both initializes memory on the heap for our <code>int_array</code> instance,
+    but also calls the constructor. Similarly, <code>delete</code> calls the destructor and then
+    frees the memory for out <code>int_array</code> instance.
+</p>
+<p>
+    What if the our <code>int_array</code> is allocated on the stack, like so:
+</p>
+<pre class="language-cpp"><code>void someFunction() {
+    auto arr = int_array(16);
+    // use array ...
+}
+</code></pre>
+<p>
+    In this case, because our <code>int_array</code> instance was allocated on the stack
+    (note no use of <code>new</code> here), it will automatically be free'd when the
+    function ends. However, C++ will also ensure that any destructors are called before the
+    objects are freed.
+</p>
+
+
+<h5>Understanding RAII</h5>
+<p>
+    An alternative, an likely more understandable, name for RAII is <strong>Scope Based
+    Resource Management</strong>, where a "Resource" could be anything such as:
+    <ul>
+        <li>Memory</li>
+        <li>DB Connections</li>
+        <li>Sockets</li>
+        <li>ThreadPool Workers</li>
+    </ul>
+    Essentially anything that requires some setup and cleanup can implement the RAII pattern
+    by following a couple of rules:
+    <ol>
+        <li>Acquire the required resources on construction</li>
+        <li>Release acquired resources on destruction</li>
+    </ol>
+</p>
+<p>
+    Given these rules, we can now see how/where our original locking C++ code works. The acquisition
+    of the lock is represented by the <code>std::lock_guard</code> type and the guard,
+    <code>m</code>, is allocated on the stack. At the end of function, <code>m</code> is destructed
+    (this is where the lock is released) and freed.
+</p>
+<p>
+    This pattern is extremely common in modern C++ code. Take for example some of the collections
+    from the std-lib, such as <code>unordered_map</code> or <code>vector</code>:
+</p>
+<pre class="language-cpp"><code>void someFunction() {
+    std::vector<int> vec;
+
+    // dynamically grow heap-allocated, backing array
+    for (int i = 0; i < 1000; i++) {
+        vec.push_back(i);
+    }
+
+    // end function without explicit cleanup of vector
+}
+</code></pre>
+
+
+<h4>Digging Deeper</h4>
+<p>
+    Due to the behavior of stack allocated objects and RAII principals, it is often preferred
+    to completely avoid the explicit use of <code>new</code> and <code>delete</code>. Instead,
+    everything should be allocated on the stack. These stack allocated objects can then manage
+    heap allocations under the covers and ensure proper allocation and cleanup happens with the
+    object life cycle (construction, destruction).
+</p>
+<p>
+    When an object must be allocated on the heap, either directly or within another RAII object,
+    then a <i>smart pointer</i> should be used.  Smart pointers are a way to represent heap allocated
+    resources on the stack that contain the same RAII principals. That is, when they are no
+    longer in scope, they clean up the associated heap memory. The main two smart pointers from
+    the standard library to know are <code>unique_ptr</code> and <code>shared_ptr</code>.
+</p>
+<p>
+    <code>unique_ptr</code> is a smart pointer that is only allowed to have a single owner. If you
+    want to pass a <code>unique_ptr</code> to a function then it must be <i>moved</i>. Moving means
+    giving ownership of the object away. A moved value can no longer be referenced and the lifetime
+    is now transferred to whomever it was moved to. To make this more clear:
+</p>
+<pre class="language-cpp"><code>{ // start of scope
+    unique_ptr&lt;string&gt; a;
+
+    { // start of scope
+        unique_ptr&lt;string&gt; b = make_unique&lt;string&gt;("Hello, World");
+
+        // not allowed, as this type of assignment tries to copy `b`, but
+        // unique_ptr's cannot be copied
+        auto c = b;
+
+        // `a` now own's the unique_ptr
+        a = move(b);
+
+        // not allowed, `a` now owns the unique_ptr
+        b-&gt;length();
+    } // end of scope, `b` is cleaned up but the memory allocated for
+      // "Hello, World" is untouched since `a` is now the owner
+
+    // allowed, since `a` is the owner of the unique_ptr
+    a-&gt;length();
+
+} // end of scope, `a` is cleaned up and memory is reclaimed
+</code></pre>
+<p>
+    <code>shared_ptr</code> is a smart pointer that allows multiple owners. Each time a
+    <code>shared_ptr</code> is copied, a ref-counter is incremented. When a <code>shared_ptr</code>
+    is destructed (cleaned up), the ref-counter is decremented. When the ref-counter hits 0,
+    then the associated heap-allocated memory is cleaned up. To make this more clear:
+</p>
+<pre class="language-cpp"><code>{ // start of scope
+    shared_ptr&lt;string&gt; a;
+
+    { // start of scope
+        // new shared pointer, ref-count is 1
+        shared_ptr&lt;string&gt; b = make_unique&lt;string&gt;("Hello, World");
+
+        // allowed, copy is made and ref-count is 2
+        auto c = b;
+
+        // allowed, copy is made and ref-count is 3
+        a = c;
+
+        // both allowed to operate on underlying data
+        b-&gt;length();
+        c-&gt;length();
+    } // end of scope, `b` and `c` cleaned up, ref-count is 1
+
+} // end of scope, `a` is cleaned up, ref-count is 0, memory is freed
+</code></pre>
+<p>
+    With these two constructs, you should never need to use a raw pointer (<code> *obj</code>)
+    or the <code>new</code> and <code>delete</code> keywords. This is a major step toward
+    writing safer, more modern C++.
+</p>
+
+</div>
+
+      </div>
+    </div>
+
+    <!-- footer -->
+<div class="footer">
+    by <a href="https://www.twitter.com/johnmurray_io" target="_blank">@johnmurray_io</a> |
+    <a href="https://github.com/Johnmurray/cpp-vs/graphs/contributors" target="_blank">contributors</a>
+</div>
+
+    <!-- Fork Me! -->
+<a href="https://github.com/JohnMurray/cpp-vs" target="_blank">
+    <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub">
+</a>
+
+    <!-- Boostrap JS -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+
+<!-- Prism JS (code highlighting) -->
+<script src="//www.cpp-vs.com/js/prism.js"></script>
+
+  </body>
+</html>

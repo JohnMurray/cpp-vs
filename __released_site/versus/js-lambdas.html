@@ -99,11 +99,10 @@ addOne(5);
 
 <h4>What's the Same</h4>
 <p>
-    <strong>The JavaScript</strong> and <strong>the C++</strong> version define a lambda
-    that is both callable directly and can be passed as a value without any special
-    treatment. Both versions also define "pure" lambdas that do not capture any local
-    state or perform any kind of mutating state-changes (i.e. calling the code, alone,
-    does not affect our program).
+    The JavaScript and the C++ version define a lambda that is both callable directly
+    and can be passed as a value without any special treatment. Both versions also
+    define "pure" lambdas that do not capture any local state or perform any kind of
+    mutating state-changes (i.e. calling the code, alone, does not affect our program).
 </p>
 
 <h4>What's Different</h4>
@@ -131,6 +130,7 @@ addOne(5);
     is no short-hand equivalent of JavaScript's curly-brace-less lambda ():
     <pre class="language-cpp"><code>const addOne = (x) => x + 1;</code></pre>
 </p>
+
 </div><div class="code-vs-title"><h3>Capturing Local State</h3></div>
 <div class='code-vs-container'>
   <div class='code-left'>
@@ -225,6 +225,66 @@ void main() {
     the lambda is called, bad things could happen.
 </p>
 
+<h4>Digging Deeper</h4>
+<p>
+    Everything in C++ must have some sort of type and representation in memory, and the same is just
+    as true for lambdas as it is any other type. Take the following:
+</p>
+<pre class="language-cpp"><code>int main() {
+    auto age = 65;
+    std::string name = "Sir Robert Christianson Manyard Sr";
+
+    auto printPerson = [age, &name](bool includeAge) -> void {
+        std::cout << name;
+        if (includeAge) {
+            std::cout << ", age: " << age;
+        }
+        std::cout << "\n";
+    }
+}
+</code></pre>
+<p>
+    The specification for C++ says that a lambda is an object of an anonymous type, created on
+    the stack. You can imagine the equivalent for this would look like:
+</p>
+<pre class="language-cpp"><code>struct LambdaPrintPerson {
+    int age;
+    std::string *name;
+
+    void printPerson(bool includeAge) {
+        std::cout << name;
+        if (includeAge) {
+            std::cout << ", age: " << age;
+        }
+        std::cout << "\n";
+    }
+};
+int main() {
+    auto age = 65;
+    std::string name = "Sir Robert Christianson Manyard Sr";
+
+    auto printPerson = LambdaPrintPerson { age, &name };
+}
+</code></pre>
+<p>
+    The reason you can <i>imagine</i> a lambda to look like this is because the exact layout
+    (padding, alignment, etc) is compiler dependent according to the specification. However, it
+    should make more sense now how values are "captured" by the lambda and the difference between
+    capturing a reference (no copy) and capturing a value (copy).
+</p>
+<p>
+    Note that it <i>is</i> possible to allocate a lambda on the heap, even though the default is
+    to allocate on the stack. Since a lambda is just an object, it can be heap allocated with the
+    <code>new</code> keyword, such as:
+</p>
+<pre class="language-cpp"><code>auto printPerson = new auto ([age, &name](bool includeAge) -> void {
+    // function body
+});
+</code></pre>
+<p>
+    Note the only additional bit of syntax is that we must wrap the lambda in parens <code>()</code>.
+</p>
+
 </div><div class="code-vs-title"><h3>Consuming</h3></div>
 <div class='code-vs-container'>
   <div class='code-left'>
@@ -307,12 +367,15 @@ sendEmail('you@your_domain.com', 'me@my_domain.com',
 
     <!-- footer -->
 <div class="footer">
-    <i>by <a href="https://www.twitter.com/johnmurray_io">@johnmurray_io</a></i>
+    by <a href="https://www.twitter.com/johnmurray_io" target="_blank">@johnmurray_io</a> |
+    <a href="https://github.com/Johnmurray/cpp-vs/graphs/contributors" target="_blank">contributors</a>
 </div>
+
     <!-- Fork Me! -->
-<a href="https://github.com/JohnMurray/cpp-vs">
+<a href="https://github.com/JohnMurray/cpp-vs" target="_blank">
     <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub">
 </a>
+
     <!-- Boostrap JS -->
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>

@@ -30,6 +30,9 @@ blockquote {
   margin-left: 10px;
   padding-left: 10px;
 }
+dl {
+  margin-left: 20px;
+}
 /**
  * Global page styles
  */
@@ -112,11 +115,13 @@ strong,
   text-align: left;
   width: 60%;
 }
-.moar-page {
-  text-align: center;
+.moar-page .resource-group dt {
+  font-weight: 400;
+  font-size: 24px;
+  margin-bottom: 10px;
 }
-.moar-page .resource-group {
-  margin-bottom: 20px;
+.moar-page .resource-group dd {
+  margin-left: 30px;
 }
 .moar-page .resource-group .link {
   display: block;
@@ -173,7 +178,8 @@ strong,
   * Footer Styles
   */
 .footer {
-  margin-top: 25px;
+  margin-top: 30px;
+  margin-bottom: 20px;
 }
 .footer a {
   color: #888;

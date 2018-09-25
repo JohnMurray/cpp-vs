@@ -1,0 +1,10 @@
+name:        '03-Map Reduce'
+filename:    'go-map-reduce.html'
+versus_lang: 'Go'
+title:       'C++ vs Go - Map Reduce'
+
+versuses:
+  - title: 'Map Reduce'
+    other: 'map-reduce.go'
+    cpp:   'map-reduce.cc'
+    description: 'description.html'

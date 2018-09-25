@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Google Analytics-->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-123758416-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-123758416-1');
+</script>
+
+<!-- Required meta tags -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+<meta name="description" content="Cpp-Vs is an educational site that teaches C++ through comparisons to other, popular programming languages." />
+<meta name="keywords" content="versus,c++ vs, c++ versus,vs,cpp,compare,compare c++" />
+
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+<link rel="stylesheet" href="//www.cpp-vs.com/style/app.css">
+
+    <title>C++ vs Go - Map Reduce</title>
+  </head>
+
+  <body>
+    <div class="page">
+
+      <!-- Title & Navigation -->
+      <div class="title-nav">
+    <div class="logo">
+        <img src="//www.cpp-vs.com/assets/logo.png" height="80" />
+    </div>
+    
+    <div class="secondary-nav">
+        <a class="primary-nav-link" href="//www.cpp-vs.com/about">About</a>
+        <a class="primary-nav-link" href="https://www.twitter.com/johnmurray_io">Feedback</a>
+    </div>
+
+    <div class="navigation">
+        <a class="primary-nav-link" href="//www.cpp-vs.com/">Versus</a>
+    </div>
+</div>
+
+      <!--Content -->
+      <div class="content">
+        
+<!-- 
+    Just a placeholder, if you want to see more about how the versus
+    code is templated, go look at the versus* files in the includes
+    directory.
+-->
+<div class="code-vs-title"><h3>Map Reduce</h3></div>
+<div class='code-vs-container'>
+  <div class='code-left'>
+    <div class="title"><h2>Cpp</h2></div>
+    <pre><code class="language-cpp line-numbers">#include &lt;atomic&gt;
+#include &lt;iostream&gt;
+#include &lt;random&gt;
+#include &lt;string&gt;
+#include &lt;thread&gt;
+#include &lt;vector&gt;
+
+using namespace std;
+using vec_iter = std::vector&lt;int&gt;::iterator;
+
+int main() {
+    random_device rd;
+    mt19937 gen(rd());
+    uniform_int_distribution&lt;&gt; dis(0, 100);
+
+    auto nums = vector&lt;int&gt;(4096);
+    for (auto i = 0; i &lt; nums.size(); i++) {
+        nums[i] = dis(gen);
+    }
+
+    atomic&lt;int&gt; totalSum;
+    vector&lt;thread&gt; threads;
+
+    // divide into 1024 blocks
+    int from = 0;
+    int to = 1024;
+    while (to &lt; nums.size()) {
+        from += 1024;
+        to += 1024;
+        threads.push_back(
+            thread([&totalSum,
+                    start = nums.begin() + from,
+                    end   = nums.begin() + to   ]() -&gt; void {
+                int sum = 0;
+                for (vec_iter cur = start; cur != end; cur++) {
+                    sum += *cur;
+                }
+                totalSum.fetch_add(sum);
+            })
+        );
+    }
+
+    for (auto &t: threads) {
+        t.join();
+    }
+
+    cout &lt;&lt; "Total Sum: " &lt;&lt; totalSum.load() &lt;&lt; "\n";
+}
+</code></pre>
+  </div>
+  <div class='code-right'>
+    <div class="title"><h2>Go</h2></div>
+    <pre><code class="language-go line-numbers">package main
+
+import (
+	"fmt"
+	"math/rand"
+	"time"
+)
+
+func main() {
+	rand.Seed(time.Now().UnixNano())
+
+	nums := make([]int, 4096)
+	for i := range nums {
+		nums[i] = rand.Intn(100)
+	}
+
+	results := make(chan int, 4)
+
+	// divide into 1024 blocks
+	from := 0
+	to := 1024
+	jobs := 0
+	for to &lt; len(nums) {
+		go func() {
+			results &lt;- sum(nums[from:to])
+		}()
+		from += 1024
+		to += 1024
+		jobs += 1
+	}
+
+	// collect all of the results
+	totalSum := 0
+	for jobs &gt; 0 {
+		totalSum += &lt;-results
+		jobs -= 1
+	}
+
+	fmt.Printf("Total Sum: %d\n", totalSum)
+}
+
+func sum(nums []int) int {
+	sum := 0
+	for _, n := range nums {
+		sum += n
+	}
+	return sum
+}
+</code></pre>
+  </div>
+</div>
+
+<div class="code-description blurb">
+  <h4>What This Code Does</h4>
+<p>
+    This code splits a task (summing numbers in a sequence) amongst multiple
+    units of concurrency (threads/goroutines) and then collects the results
+    using idiomatic approaches.
+</p>
+
+
+<h4>What's the Same</h4>
+<p>
+    Both approaches use a random number generator to populate the initial input-data.
+    Both approaches also use a slice or view when handing bits of the input data
+    to the concurrent sub-routine. That is, both implementations avoid explicit copies
+    when passing data.
+</p>
+<p>
+    Lastly, both implementations wait for the concurrent sub-routines to finish before
+    displaying the final result. This is done in Go by reading from a channel <code>N</code>
+    times, where <code>N</code> represents the number of goroutines created. C++ does this
+    by calling <code>join()</code> on the thread object, which waits for the thread to exit
+    before continuing.
+</p>
+
+<h4>What's Different</h4>
+<p>
+    The first noticeable difference, although not the main point of this versus, is the random
+    number generation. See the later section <strong>Digging Deeper: Random Number Generation</strong>
+    if this most interests you. The main semantic differences lie in how we collect and combine
+    (reduce) the results from the concurrent operations.
+</p>
+<p>
+    Again, it is idiomatic in Go to pass results via channels. As such our "reduction" of results
+    happens within the main goroutine (summing all individual results). C++, on the other hand, uses
+    an <code>atomic&lt;int&gt;</code>, which allows each thread to participate in the "reduction"
+    by atomically adding their results to the <code>totalSum</code> object. Atomics in C++ rely on
+    the compiler to efficiently implement for the target platform you're compiling too. That is,
+    some CPUs have the ability to support atomic operations at the instruction level. For CPUs that
+    do not the compiler may result to other methods, such as locks, to implement atomic operations.
+</p>
+<p>
+    The second difference is how we represent "slices" of arrays; that is a view of an array that
+    doesn't involve performing copies. Go uses the type <code>[]T</code> to represent slices and
+    slices can also be "sliced" using the <code>[M:N]</code> notation. I would consider this "first
+    class" support for the concept of slices. C++ on the other hand achieves this through the use of
+    iterators.
+</p>
+
+
+<h5>Digging Deeper: C++ Slices (AKA Iterators)</h5>
+<p>
+    An iterator in C++ is a cursor object that points to a particular position in a data-structure.
+    In our case, it is pointing to a position in a <code>std::vector</code>. In many respects the cursor
+    acts like a pointer. We can advance the position by incrementing, such as <code>cur++</code>. We
+    get the value by dereferencing <code>*cur</code>. We ensure that we do not advance the iterator
+    beyond the end of the data-structure by comparing it to a stop position, <code>end</code>. However,
+    since we are working with a fixed-size vector, this is easy for us to ensure. If we were iterating
+    over a dynamically sized vector, our code would look like:
+</p>
+<pre class="language-cpp"><code>for (auto curr = my_vec.begin(); curr++; curr != my_vec.end()) {
+  // process items
+}
+</code></pre>
+<p>
+    However, if we were going to iterate the entire array and perform the same operation for each
+    loop, we could also write this code as:
+</p>
+<pre class="language-cpp"><code>for (auto &amp;val: my_vec) {
+  // process items
+}
+</code></pre>
+<p>
+    While the two abstractions look similar, the second method is called a "ranged for loop" and
+    was introduced in C++ 11. This form is the most convenient, the most limiting, and most often
+    seen when operating over all elements within a loop. The first approach, using iterators, is
+    the most flexible option for when a simple for loop is not all that you need. With the iterator
+    you could:
+</p>
+<ul>
+  <li>Pass the iterator to a function as a slice (like our example above)</li>
+  <li>Increment the iterator only under certain conditions and possibly re-processing an item multiple times within a loop</li>
+  <li>Process every <i>other</i> element within a loop (by incrementing the cursor by 2: <code>cur += 2</code>)</li>
+  <li>Process a collection backwards using the reverse iterators (<code>rbegin()</code> and <code>rend()</code>)</li>
+</ul>
+
+    
+<h5>Digging Deeper: Random Number Generation</h5>
+<p>
+    The Go implementation offers a random-number generator similar
+    to many high-level languages. However C++, in true C++ fashion, provides some lower level
+    abstractions and gives you more control over <i>how</i> your random numbers are generated.
+</p>
+<p>
+    <dl>
+        <dt><strong><code>random_device</code></strong></dt>
+        <dd>
+            Generates a random numeric value from hardware entropy.
+            The exact method of how this is generated is compiler dependent (e.g. Clang uses
+            <code>/dev/urandom</code> on Linux, while GCC uses Intel's <code>rdrand</code> instruction). It
+            is also possible that your platform doesn't support a way to generate random numbers from hardware
+            entropy, in which case this type would not be constructable. A value from a
+            <code>random_device</code> is often used as a seed value to any of the stdlib random number
+            generators.
+        </dd>
+        <dt><strong><code>mt19937</code></strong></dt>
+        <dd>
+            <p>
+                A random number generator based on the
+                <a href="https://en.wikipedia.org/wiki/Mersenne_Twister" target="_blank">Mersenne Twister</a>
+                algorithm.  The C++ standard library provides a decently large selection of random number
+                generators to use, and depending on your application you might care deeply about which one
+                is used.  The list of random-number algorithms is:
+            </p>
+            <ul>
+                <li><code>minstd_rand0</code></li>
+                <li><code>minstd_rand</code></li>
+                <li><code>mt19937</code></li>
+                <li><code>mt19937_64</code></li>
+                <li><code>ranlux24_base</code></li>
+                <li><code>ranlux48_base</code></li>
+                <li><code>ranlux24</code></li>
+                <li><code>ranlux48</code></li>
+                <li><code>knuth_b</code></li>
+                <li><code>default_random_engine</code></li>
+            </ul>
+            <p>
+                For more information on what the differences are, you can view the reference page
+                for the <code>&lt;random&gt;</code> header
+                <a href="https://en.cppreference.com/w/cpp/header/random" target="_blank">here</a>.
+            </p>
+        </dd>
+        <dt><strong><code>uniform_int_distribution</code></strong></dt>
+        <dd>
+            <p>
+                Allows us to specify a range in which all numbers in that range are equally likely to be returned
+                as a random number. While not responsible for generating random numbers, this allows us to specify
+                ranges of random numbers we'd like to receive which is different from the range of random numbers
+                being generated, while not losing "randomness" of values.
+            </p>
+            <p>
+                Alternatively, other distributions allow us to shift the probabilities of getting certain numbers,
+                such as an
+                <a href="https://en.wikipedia.org/wiki/Exponential_distribution" target="_blank">Exponential Distribution</a>,
+                which may bias number generation to one side of the range over time.
+            </p>
+            <p>
+                At the time of writing, there are 20 distributions defined in the <code>&lt;random&gt;</code>
+                header. You can see the full list of standard-library distributions
+                <a href="https://en.cppreference.com/w/cpp/header/random" target="_blank">here</a>.
+        </dd>
+    </dl>
+<p>
+
+</div>
+
+      </div>
+    </div>
+
+    <!-- footer -->
+<div class="footer">
+    by <a href="https://www.twitter.com/johnmurray_io" target="_blank">@johnmurray_io</a> |
+    <a href="https://github.com/Johnmurray/cpp-vs/graphs/contributors" target="_blank">contributors</a>
+</div>
+
+    <!-- Fork Me! -->
+<a href="https://github.com/JohnMurray/cpp-vs" target="_blank">
+    <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub">
+</a>
+
+    <!-- Boostrap JS -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+
+<!-- Prism JS (code highlighting) -->
+<script src="//www.cpp-vs.com/js/prism.js"></script>
+
+  </body>
+</html>
