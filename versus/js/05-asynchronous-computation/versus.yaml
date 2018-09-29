@@ -8,3 +8,7 @@ versuses:
     other: 'os-events.js'
     cpp:   'os-events.cc'
     description: 'os-events-description.html'
+  -title: 'Delay or Schedule Computations'
+    other: 'timeout.js'
+    cpp:   'timeout.cc'
+    description: 'timeout-description.html'
