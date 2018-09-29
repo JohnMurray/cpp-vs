@@ -1,0 +1,33 @@
+<h4>What This Code Does</h4>
+<p>
+	Nesting the execution of scheduled lambdas on the same thread without blocking is demonstrated by
+	writing the two sub sentences of Neil Armstrong's Moon-Landing quote delayed in time.
+	<ol>
+		<li>Register a timer to call it's handler one second after program start.</li>
+		<li>The handler prints out the first part of the quote and then schedules another timer with one second delay</li>
+		<li>to print out the rest of the quote.</li>
+		<li>Schedule the execution of the worker providing a parameter after one second.</li>
+	</ol>
+</p>
+<h4>What's the Same</h4>
+<p>
+	The nesting of asynchronously executed lambdas is demonstrated in both languages.
+</p>
+<h4>What's Different</h4>
+<p>
+	<p>
+		In C++ the destruction of a Boost.Asio timer cancels any pending asynchronous wait operations.
+		Since exiting a C++ block scope calls the destructor of all stack objects, we avoid this for the inner timer by
+		creating it on the heap and manage access and lifetime by a C+ shared pointer created on the stack.
+		In order to prevent it's reference count drop to zero and get the timer object destroyed nevertheless
+		when the block scope exits, we have to pass a copy of it into the scheduled timeout handler.
+	</p>
+	<p>
+		This looks awkward because the timer object is not really used in it's completion handler. While JavaScript
+		manages the lifetime of it's reference objects liker timers itself, in C++ the reference counting is left to
+		the application.
+	</p>
+</p>
+<p>
+	Also C++ requires checking the error code parameter of the handler to distinguish timer expiry from cancellation.
+</p>

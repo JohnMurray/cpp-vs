@@ -12,3 +12,7 @@ versuses:
     other: 'timeout.js'
     cpp:   'timeout.cc'
     description: 'timeout-description.html'
+  -title: 'Nesting Scheduling of Asynchronous Computations'
+    other: 'nested-timeouts.js'
+    cpp:   'nested-timeouts.cc'
+    description: 'nested-timeouts-description.html'

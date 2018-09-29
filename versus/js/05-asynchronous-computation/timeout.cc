@@ -12,9 +12,11 @@ int main() {
 	auto keepAliveTimerPtr = make_shared<asio::steady_timer>(ioc, chrono::hours(11 * 24));
 
 	auto quitAfterGreetingPersonToo = [keepAliveTimerPtr](const boost::system::error_code& ec, const string& name) {
-		cout << "Hello " << name << "!" << endl;
+		if (!ec) {
+			cout << "Hello " << name << "!" << endl;
 
-		keepAliveTimerPtr->cancel();
+			keepAliveTimerPtr->cancel();
+		}
 	};
 
 	// timer begins to run now

@@ -1,6 +1,6 @@
 <h4>What This Code Does</h4>
 <p>
-	Delaying or scheduling the execution of functions lambdas or methods on the same thread without blocking.
+	Delaying or scheduling the execution of functions, lambdas or methods on the same thread without blocking.
 	<ol>
 		<li>Register a 11-day dummy <code>keepAliveTimer</code> to keep the program from exiting early.</li>
 		<li>Define a worker function <code>quitAfterGreetingPerson</code> which prints a greeting to the console before killing the <code>keepAliveTimer</code>.</li>
@@ -27,7 +27,8 @@
 </p>
 <p>
 	Very different from JavaScript in C++ not only the expiry but also the canceling of a timer invokes the handler.
-	Cancellation is reported with the special <code>boost::asio::error::operation_aborted</code> error code.
+	Cancellation is reported by the error code parameter e.g. <code>boost::asio::error::operation_aborted</code>.
+	Therefore the error code needs to be checked before performing the actual scheduled computations
 </p>
 <p>
 	Destroying a Boost.Asio timer object cancels any outstanding asynchronous wait operations associated with the timer
