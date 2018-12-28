@@ -19,24 +19,25 @@
 <h4>What's Different</h4>
 <p>
 	In C++ the parameters need to be provided by <code>std::bind</code> while in JavaScript they are appended as
-	the <code>setTimeout</code> arguments. (Though one could use <code>Function.prototype.bind</code> to make it like in C++).
+	the <code>setTimeout</code> arguments. (Though one could use <code>setTimeout(quitAfterGreetingPerson.bind(undefined, "World"), 1000)</code>
+	to make it look more like in C++).
 </p>
 <p>
 	In C++ the definition of the timer and the registering of the worker are separate. Thus under circumstances
 	a timer may already be expired before a handler is registered. This is not possible in JavaScript.
 </p>
 <p>
-	Very different from JavaScript in C++ not only the expiry but also the canceling of a timer invokes the handler.
+	C++ is very different from JavaScript in that not only the expiring, but also the canceling of a timer invokes
+	the same handler.
 	Cancellation is reported by the error code parameter e.g. <code>boost::asio::error::operation_aborted</code>.
 	Therefore the error code needs to be checked before performing the actual scheduled computations
 </p>
 <p>
 	Destroying a Boost.Asio timer object cancels any outstanding asynchronous wait operations associated with the timer
 	as if by calling <code>timer.cancel()</code>.
-	<p>
+
 	Thus to achieve similarity with JavaScript
 	when creating timers in C++ block scopes, e.g. lambdas, one should rather create timers on the heap with <code>new</code>
 	and share them via strong reference <code>std::shared_ptr</code> with their handler. This way the timer will not
 	be destructed until the handler was called (i.e by timer expiry or cancellation).
-	</p>
 </p>

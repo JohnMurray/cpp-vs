@@ -6,7 +6,6 @@
 		<li>Register a timer to call it's handler one second after program start.</li>
 		<li>The handler prints out the first part of the quote and then schedules another timer with one second delay</li>
 		<li>to print out the rest of the quote.</li>
-		<li>Schedule the execution of the worker providing a parameter after one second.</li>
 	</ol>
 </p>
 <h4>What's the Same</h4>
@@ -14,7 +13,6 @@
 	The nesting of asynchronously executed lambdas is demonstrated in both languages.
 </p>
 <h4>What's Different</h4>
-<p>
 	<p>
 		In C++ the destruction of a Boost.Asio timer cancels any pending asynchronous wait operations.
 		Since exiting a C++ block scope calls the destructor of all stack objects, we avoid this for the inner timer by
@@ -24,10 +22,9 @@
 	</p>
 	<p>
 		This looks awkward because the timer object is not really used in it's completion handler. While JavaScript
-		manages the lifetime of it's reference objects liker timers itself, in C++ the reference counting is left to
+		itself manages the lifetime of it's reference objects - like timers -; in C++ the reference counting is left to
 		the application.
 	</p>
-</p>
 <p>
-	Also C++ requires checking the error code parameter of the handler to distinguish timer expiry from cancellation.
+	Also C++ requires checking the error code parameter of the handler to distinguish timer expiry from timer cancellation.
 </p>
