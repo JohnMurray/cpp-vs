@@ -15,14 +15,17 @@ int main() {
 		if (!ec) {
 			cout << "That's one small step for a man," << flush;
 
-			auto leapTimerPtr = make_shared<asio::steady_timer>(ioc, chrono::seconds(1));
+			auto leapTimer = make_shared<asio::steady_timer>(
+                    ioc, chrono::seconds(1));
 
-			// WITHOUT CAPTURING leapTimerPtr the handler would be invoked IMMEDIATELY with non-zero ec
-			leapTimerPtr->async_wait([leapTimerPtr](const boost::system::error_code& ec) {
-				if (!ec) {
-					cout << " one giant leap for mankind." << endl;
-				}
-			});
+			// WITHOUT CAPTURING leapTimerPtr the handler would be
+            // invoked IMMEDIATELY with non-zero error code
+			leapTimer->async_wait(
+                [leapTimer](const boost::system::error_code& ec) {
+                    if (!ec) {
+                        cout << " one giant leap for mankind." << endl;
+                    }
+                });
 		}
 	});
 
