@@ -5,10 +5,10 @@ import (
 	"math/rand"
 )
 
-func sendEmail(to string, from string, subject string, message string,
-	successCb func(string), failureCb func(string)) {
-	// pretend we tried to send an email and call the
-	// success or failure callback randomly.
+func sendEmail(to string, from string, subject string,
+               message string,
+               successCb func(string),
+               failureCb func(string)) {
 	if rand.Float32() >= 0.5 {
 		successCb(to)
 	} else {
@@ -24,7 +24,9 @@ func main() {
 			fmt.Printf("Successful email sent to: %s\n", to)
 		},
 		func(to string) {
-			fmt.Printf("OH NO! Very important email not sent to %s\n", to)
+			fmt.Printf(
+				"OH NO! Very important email not sent to %s\n",
+				to)
 		})
 
 }
