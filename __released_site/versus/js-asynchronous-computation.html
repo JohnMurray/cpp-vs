@@ -207,6 +207,191 @@ Hello World!
 
 </p>
 
+</div><div class="code-vs-title"><h3>Delay or Schedule Computations</h3></div>
+<div class='code-vs-container'>
+  <div class='code-left'>
+    <div class="title"><h2>Cpp</h2></div>
+    <pre><code class="language-cpp line-numbers">#include &lt;iostream&gt;
+#include &lt;chrono&gt;
+#include &lt;memory&gt;
+#include &lt;boost/asio.hpp&gt;
+
+using namespace std;
+namespace asio = ::boost::asio;
+
+int main() {
+	asio::io_context ioc;
+
+	auto keepAliveTimer = make_shared&lt;asio::steady_timer&gt;(
+            ioc, chrono::hours(11 * 24));
+
+	auto quitAfterGreetingPersonToo =
+        [keepAliveTimer](const boost::system::error_code& ec,
+                         const string& name) {
+            if (!ec) {
+                cout &lt;&lt; "Hello " &lt;&lt; name &lt;&lt; "!" &lt;&lt; endl;
+
+                keepAliveTimer-&gt;cancel();
+            }
+        };
+
+	// timer begins to run now
+	auto greetTimer = asio::steady_timer(ioc, chrono::seconds(1));
+
+	// later we can attach the completion handler
+	greetTimer.async_wait(bind(
+		quitAfterGreetingPersonToo,
+		std::placeholders::_1,
+		"World"));
+
+	ioc.run();
+	return 0;
+}
+</code></pre>
+  </div>
+  <div class='code-right'>
+    <div class="title"><h2>JavaScript</h2></div>
+    <pre><code class="language-javascript line-numbers">// run for 11 days
+const keepAliveTimer = setTimeout(function keepAlive(){}, 1.0e+9);
+
+function quitAfterGreetingPerson(name) {
+	console.log("Hello " + name + "!");
+	
+	clearTimeout(keepAliveTimer);
+}
+
+const greetTimer = setTimeout(quitAfterGreetingPerson, 1000, "World");</code></pre>
+  </div>
+</div>
+
+<div class="code-description blurb">
+  <h4>What This Code Does</h4>
+<p>
+	Delaying or scheduling the execution of functions, lambdas or methods on the same thread without blocking.
+	<ol>
+		<li>Register a 11-day dummy <code>keepAliveTimer</code> to keep the program from exiting early.</li>
+		<li>Define a worker function <code>quitAfterGreetingPerson</code> which prints a greeting to the console before killing the <code>keepAliveTimer</code>.</li>
+		<li>Schedule the execution of the worker providing a parameter after one second.</li>
+	</ol>
+</p>
+<h4>What's the Same</h4>
+<p>
+	The building blocks when registering function for execution through timers is the same. One has to specify a
+	<ul>
+		<li>delay,
+		</li><li>a lambda, free function, <code>std::function</code> or bound member function and</li>
+		<li>additional parameters</li>
+	</ul>.
+</p>
+<h4>What's Different</h4>
+<p>
+	In C++ the parameters need to be provided by <code>std::bind</code> while in JavaScript they are appended as
+	the <code>setTimeout</code> arguments. (Though one could use <code>setTimeout(quitAfterGreetingPerson.bind(undefined, "World"), 1000)</code>
+	to make it look more like in C++).
+</p>
+<p>
+	In C++ the definition of the timer and the registering of the worker are separate. Thus under circumstances
+	a timer may already be expired before a handler is registered. This is not possible in JavaScript.
+</p>
+<p>
+	C++ is very different from JavaScript in that not only the expiring, but also the canceling of a timer invokes
+	the same handler.
+	Cancellation is reported by the error code parameter e.g. <code>boost::asio::error::operation_aborted</code>.
+	Therefore the error code needs to be checked before performing the actual scheduled computations
+</p>
+<p>
+	Destroying a Boost.Asio timer object cancels any outstanding asynchronous wait operations associated with the timer
+	as if by calling <code>timer.cancel()</code>.
+
+	Thus to achieve similarity with JavaScript
+	when creating timers in C++ block scopes, e.g. lambdas, one should rather create timers on the heap with <code>new</code>
+	and share them via strong reference <code>std::shared_ptr</code> with their handler. This way the timer will not
+	be destructed until the handler was called (i.e by timer expiry or cancellation).
+</p>
+</div><div class="code-vs-title"><h3>Nesting Scheduling of Asynchronous Computations</h3></div>
+<div class='code-vs-container'>
+  <div class='code-left'>
+    <div class="title"><h2>Cpp</h2></div>
+    <pre><code class="language-cpp line-numbers">#include &lt;iostream&gt;
+#include &lt;chrono&gt;
+#include &lt;memory&gt;
+#include &lt;boost/asio.hpp&gt;
+
+using namespace std;
+namespace asio = ::boost::asio;
+
+int main() {
+	asio::io_context ioc;
+
+	auto stepTimer = asio::steady_timer(ioc, chrono::seconds(1));
+
+	stepTimer.async_wait([&ioc](const boost::system::error_code& ec) {
+		if (!ec) {
+			cout &lt;&lt; "That's one small step for a man," &lt;&lt; flush;
+
+			auto leapTimer = make_shared&lt;asio::steady_timer&gt;(
+                    ioc, chrono::seconds(1));
+
+			// WITHOUT CAPTURING leapTimerPtr the handler would be
+            // invoked IMMEDIATELY with non-zero error code
+			leapTimer-&gt;async_wait(
+                [leapTimer](const boost::system::error_code& ec) {
+                    if (!ec) {
+                        cout &lt;&lt; " one giant leap for mankind." &lt;&lt; endl;
+                    }
+                });
+		}
+	});
+
+	ioc.run();
+	return 0;
+}
+</code></pre>
+  </div>
+  <div class='code-right'>
+    <div class="title"><h2>JavaScript</h2></div>
+    <pre><code class="language-javascript line-numbers">setTimeout(function(){
+	process.stdout.write("That's one small step for a man,");
+	
+	setTimeout(function() {
+		console.log(" one giant leap for mankind.");
+	}, 1000);
+	
+}, 1000);</code></pre>
+  </div>
+</div>
+
+<div class="code-description blurb">
+  <h4>What This Code Does</h4>
+<p>
+	Nesting the execution of scheduled lambdas on the same thread without blocking is demonstrated by
+	writing the two sub sentences of Neil Armstrong's Moon-Landing quote delayed in time.
+	<ol>
+		<li>Register a timer to call it's handler one second after program start.</li>
+		<li>The handler prints out the first part of the quote and then schedules another timer with one second delay</li>
+		<li>to print out the rest of the quote.</li>
+	</ol>
+</p>
+<h4>What's the Same</h4>
+<p>
+	The nesting of asynchronously executed lambdas is demonstrated in both languages.
+</p>
+<h4>What's Different</h4>
+	<p>
+		In C++ the destruction of a Boost.Asio timer cancels any pending asynchronous wait operations.
+		Since exiting a C++ block scope calls the destructor of all stack objects, we avoid this for the inner timer by
+		creating it on the heap and manage access and lifetime by a C+ shared pointer created on the stack.
+		In order to prevent it's reference count drop to zero and get the timer object destroyed nevertheless
+		when the block scope exits, we have to pass a copy of it into the scheduled timeout handler.
+	</p>
+	<p>
+		This looks awkward because the timer object is not really used in it's completion handler. While JavaScript
+		itself manages the lifetime of it's reference objects - like timers -; in C++ the reference counting is left to
+		the application.
+	</p>
+<p>
+	Also C++ requires checking the error code parameter of the handler to distinguish timer expiry from timer cancellation.
+</p>
 </div>
 
       </div>
