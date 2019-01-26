@@ -1,0 +1,52 @@
+<h4>What This Code Does</h4>
+<p>
+    The above code creates a simple lambda that adds <code>1</code> to the
+    value provided. It is called directly and also passed as a value into
+    functions that operate over lists of data.
+</p>
+
+<h4>What's the Same</h4>
+<p>
+    The Ruby and the C++ versions define a lambda which is callable and also passable
+    as a first-class-object into other functions. Both versions also define "pure" lambdas
+    that do not capture any local state or perform any kind of mutating state-changes
+    (i.e. calling the code, alone, does not affect our program).
+</p>
+
+<h4>What's Different</h4>
+<p>
+    The Ruby version uses a <code>.call</code> function on the lambda itself to invoke it
+    whereas the C++ version is directly callable (no different than a regular function).
+    Additionally, in Ruby, lambdas (which are also a form of <code>Proc</code>s) are not always
+    directly passable to functions. Functions instead require a 'block'. The <code>&amp;</code>
+    is a unary operator that automaitcally converts a lambda or proc into a block. In this way,
+    the C++ version is more straight-forward / intuitive.
+</p>
+<p>
+    Beyond this difference, there is syntax differences in how the lambda is declared. Ruby very
+    simply declares a lambda as a paramter list followed by a code-block and doesn't specify types.
+    C++, being strongly <i>and</i> statically typed, must specify all the types and consists of
+    4 distinct parts; the capture, the parameters, the return type, and the body.
+</p>
+<pre class="language-cpp"><code>[](int param1, int param2) -> int {
+    return param1 + param2;
+}
+</code></pre>
+<p>
+    The <code>[]</code> part is a list of variables we'd like to "capture" in our lambda (more on
+    this in the next section). The parameters are everything between <code>(</code> and
+    <code>)</code> and what comes after the <code>-&gt</code>, but before the <code>{</code>,
+    is the return type. Lastly, what's in the curly-braces is the function body (it's worth
+    pointing out that C++ lambdas require a <code>return</code> statement for any lambdas that produce
+    a value).
+</p>
+<p>
+    Another difference is how we type the variable we are assigning the lambda to.
+</p>
+<pre class="language-cpp"><code>std::function&lt;ReturnType(Arg1Type, Arg2Type, Arg3Type)&gt;</code></pre>
+<p>
+    It is worth pointing out that for complex types such as the one above, the <code>auto</code> keyword
+    is used which instructs the compiler to figure out the type for the variable rather than specifying
+    it by hand. So our original lambda assignment could be rewritten to:
+</p>
+<pre class="language-cpp"><code>auto addOne = [](int x) -> int { return x + 1; };</code></pre>

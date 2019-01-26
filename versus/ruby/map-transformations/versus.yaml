@@ -1,8 +1,0 @@
-name:        'Map Transformations'
-filename:    'ruby-map-transformations.html'
-versus_lang: 'Ruby'
-
-other:
-  - 'transform.rb'
-cpp:
-  - 'transform.cc'

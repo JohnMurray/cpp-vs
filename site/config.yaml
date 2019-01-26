@@ -12,8 +12,8 @@ versus:                          # Folders relative to `versus_folder`
     folder: 'js'
   - name:   'Go'
     folder: 'go'
-#  - name:   'Ruby'
-#    folder: 'ruby'
+  - name:   'Ruby'
+    folder: 'ruby'
 #  - name:   'Scala'
 #    folder: 'scala'
 
