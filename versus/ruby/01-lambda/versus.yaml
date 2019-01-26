@@ -1,0 +1,18 @@
+name:        '01-Lambdas'
+filename:    'ruby-lambdas.html'
+versus_lang: 'Ruby'
+title:       'C++ vs Ruby - Lambdas'
+
+versuses:
+  - title: 'Lambdas'
+    other: 'lambda.rb'
+    cpp:   'lambda.cc'
+    description: 'description.html'
+  - title: 'Capturing Local State'
+    other: 'capture.rb'
+    cpp:   'capture.cc'
+    description: 'capture-description.html'
+  - title: 'Consuming'
+    other: 'consuming.rb'
+    cpp:   'consuming.cc'
+    description: 'consuming-description.html'

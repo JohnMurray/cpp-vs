@@ -21,7 +21,7 @@ RUN apt-get install -y \
       ruby-dev
 
 RUN npm install -g less
-RUN gem install bundler
+RUN gem install bundler -v 2.0.1
 
 # Setup web-server dependencies
 COPY Gemfile .

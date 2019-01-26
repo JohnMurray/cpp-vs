@@ -1,8 +1,0 @@
-name:        'Array Transformations'
-filename:    'ruby-array-transformations.html'
-versus_lang: 'Ruby'
-
-other:
-  - 'transform.rb'
-cpp:
-  - 'transform.cc'
