@@ -1,7 +1,7 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    puma (3.11.4)
+    puma (3.12.6)
     rack (2.0.6)
     rack-contrib (2.1.0)
       rack (~> 2.0)
