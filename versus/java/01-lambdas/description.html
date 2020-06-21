@@ -1,0 +1,46 @@
+<h4>What This Code Does</h4>
+<p>
+    The above code creates a simple lambda that adds <code>1</code> to the
+    value provided. It is called directly and also passed as a value into
+    functions that operate over lists of data.
+</p>
+
+<h4>What's the Same</h4>
+<p>
+    The Java and the C++ version define a lambda that is callable, directly in the case
+    of C++ and through the <code>apply()</code> method in Java. Both versions also
+    define "pure" lambdas that do not capture any local state or perform any kind of
+    mutating state-changes (i.e. calling the code, alone, does not affect our program).
+</p>
+<p>
+    In Java, a lambda is really just syntactic sugar for creating an anonymous instance
+    of the functional interfaces.
+</p>
+
+<h4>What's Different</h4>
+    The two examples have very little differences, 
+
+    The differences mostly lie in type declarations and syntax. While the structure is
+    the same, C++ must define all of the parameter and return types. This is most visible
+    in how our lambda is structured.
+</p>
+<p>
+    <code>std::function</code> is used to represent the return and parameter types like so:
+</p>
+<pre class="language-cpp"><code>std::function&lt;ReturnType(Arg1Type, Arg2Type, Arg3Type)&gt;</code></pre>
+<p>
+    The lambda itself has 4 parts. The capture, the parameters, the return type, and the body.
+</p>
+<pre class="language-cpp"><code>auto lambda = [](int param1, int param2) -> int {
+    return param1 + param2;
+}
+</code></pre>
+<p>
+    The <code>[]</code> part is a list of variables we'd like to "capture" in our lambda (more on
+    this in the next section). The parameters are everything between <code>(</code> and
+    <code>)</code> and what comes after the <code>-&gt</code>, but before the <code>{</code>,
+    is the return type. And what's in the curly-braces is the function body. It's also worth pointing
+    out that we must always use <code>return</code> if we want to return a value from our lambda. There
+    is no short-hand equivalent of JavaScript's curly-brace-less lambda ():
+    <pre class="language-cpp"><code>const addOne = (x) => x + 1;</code></pre>
+</p>
