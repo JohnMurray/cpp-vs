@@ -24,7 +24,7 @@ docker-dev-shell:
 
 .PHONY: docker-serve
 docker-serve: docker-stop docker-dev-build
-	docker run -d=true -p 1234:1234 cpp-vs:latest
+	docker run --rm -d=true -p 1234:1234 cpp-vs:latest
 	@echo "cpp-vs.com running at http://localhost:1234/"
 
 .PHONY: docker-stop
